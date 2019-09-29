@@ -1,0 +1,14 @@
+@charset "utf-8";
+
+.flex-container{
+    display: flex;
+}
+.navbar-item{
+    flex: 1;
+}
+.header-item{
+    flex: 1;
+}
+.title{
+    flex: 2;
+}
