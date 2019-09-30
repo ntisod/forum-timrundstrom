@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" type="text/css" href="./styles/forum-example.css">
+    <link rel="stylesheet" type="text/css" href="./forum-example.css">
     <title>WSP1 Forum</title>
 </head>
 <body>
@@ -13,7 +13,7 @@
     <header>
         <!--Header logo + name-->
         <a class="header">
-            <img src="./pictures/nti-logo-black.png" alt="Black NTI logo" id="logo">
+            <img src="../pictures/nti-logo-black.png" alt="Black NTI logo" id="logo">
             <h1>NTI Forum</h1>
         </a>
         <!--Header menu-->
@@ -41,8 +41,8 @@
 
         <!--Side photos-->
         <div class="sidePhotos">
-            <img src="./pictures/student-purple-hue.jpg" alt="stockphoto of female student" class="left">
-            <img src="./pictures/college-students-purple-hue.jpg" alt="stockphoto of college graduates" class="right">
+            <img src="../pictures/student-purple-hue.jpg" alt="stockphoto of female student" class="left">
+            <img src="../pictures/college-students-purple-hue.jpg" alt="stockphoto of college graduates" class="right">
         </div>
 
         <!--Temporary post examples-->

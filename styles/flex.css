@@ -3,10 +3,7 @@
 .flex-container{
     display: flex;
 }
-.navbar-item{
-    flex: 1;
-}
-.header-item{
+.flex-item{
     flex: 1;
 }
 .title{

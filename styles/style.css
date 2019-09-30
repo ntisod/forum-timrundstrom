@@ -37,7 +37,24 @@ footer{
     width: 100%;
 }
 
+
 /*  Search section  */
 h2{
     text-align: center;
+}
+.center{
+    margin: auto;
+}
+#sortBy{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/*  Styling    */
+a.linkStyle{
+    text-decoration: none;
+    color: white;
+}
+.title a{
+    color: black;
 }
