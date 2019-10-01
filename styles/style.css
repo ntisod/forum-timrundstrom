@@ -64,17 +64,19 @@ h1, .post{
     margin-left: auto;
 }
 .aside img{
-    width: 300px;
-    height: 600px;
+    display: none;
+    width: 200px;
+    height: 400px;
     padding-bottom: 70px;
 }
 
 /*  Post feed   */
 .main{
-    width: 40%;
+    width: 90%;
 }
 .post{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
     padding: 10px;
 }
 .post:hover{
@@ -98,8 +100,8 @@ span{
 
 .buttons{
     text-align: center;
-    margin-bottom: 30px;
-    margin-top: 10px;
+    padding-bottom: 30px;
+    padding-top: 30px;
 }
 
 a.button {

@@ -7,8 +7,8 @@
     </div>
 
     <div class="flex-container">
-        <div class="navbar-item flex-item"><a href="../html/new-post.php">New Post</a></div>
-        <div class="navbar-item flex-item"><a href="../html/profile.php">Profile</a></div>
-        <div class="navbar-item flex-item"><a href="../html/login.php">Login</a></div>
+        <a class="navbar-item flex-item" href="../html/new-post.php">New Post</a>
+        <a class="navbar-item flex-item" href="../html/profile.php">Profile</a>
+        <a class="navbar-item flex-item" href="../html/login.php">Login</a>
     </div>
 </header>
