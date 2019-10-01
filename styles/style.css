@@ -32,8 +32,6 @@ body{
     cursor: pointer;
 }
 footer{
-    position: fixed;
-    bottom: 0;
     width: 100%;
 }
 
@@ -50,11 +48,83 @@ h2{
     margin-right: 10px;
 }
 
-/*  Styling    */
-a.linkStyle{
+/*  Link styling   */
+a{
     text-decoration: none;
     color: white;
 }
-.title a{
+h1, .post{
     color: black;
+}
+
+/*  Main section    */
+.wrapper > *{
+    margin-top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.aside img{
+    width: 300px;
+    height: 600px;
+    padding-bottom: 70px;
+}
+
+/*  Post feed   */
+.main{
+    width: 40%;
+}
+.post{
+    margin-bottom: 20px;
+    padding: 10px;
+}
+.post:hover{
+    background-color: #eee;
+    cursor: pointer;
+}
+.post h3{
+    font-size: 1.5em;
+}
+.post p{
+    font-size: 1em;
+}
+span{
+    font-size: 0.8em;
+    font-weight: normal;
+}
+
+
+
+/*  Buttons */
+
+.buttons{
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+a.button {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 50%;
+} 
+.button {
+    background-color: rgb(180, 80, 180);
+    color: white;
+}
+.button:hover{
+    background-color: rgb(150, 0, 150);
+}
+.number{
+    background-color: #f1f1f1;
+    color: black;
+}
+.number:hover{
+    background-color: #ddd;
+}
+.buttons p{
+    display: inline-block;
+}
+.selected{
+    border: 2px solid rgb(180, 80, 180);
 }
