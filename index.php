@@ -15,7 +15,7 @@
     <h2>Posts</h2>
     <div class="flex-container">
         <form action="" method="get" class="center">
-            <input type="search" name="searchpost" placeholder="Search" id="search">
+            <input type="search" name="searchpost" placeholder="Search" class="search">
             <select name="sortBy" id="sortBy">
                 <option value="latest">Latest</option>
                 <option value="oldest">Oldest</option>

@@ -34,11 +34,17 @@ body{
 footer{
     width: 100%;
 }
+.freeze-footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
 
 
 /*  Search section  */
 h2{
     text-align: center;
+    font-size: 2em;
 }
 .center{
     margin: auto;
@@ -129,4 +135,44 @@ a.button {
 }
 .selected{
     border: 2px solid rgb(180, 80, 180);
+}
+
+/*  Login   */
+.loginfield{
+    flex-direction: column;
+    background-color: #333333;
+    color: white;
+    font-size: 1.3em;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.loginfield > *{
+    margin-top: 10px;
+}
+.checkbox input{
+    width: 20px;
+    height: 20px;
+}
+.checkbox{
+    font-size: 0.8em;
+}
+.loginBtn{
+    height: 40px;
+    font-size: 0.8em;
+    font-family: 'Montserrat', sans-serif;
+}
+.search input{
+    height: 20px;
+    font-size: 1em;
+    font-family: 'Montserrat', sans-serif;
+}
+.tinyLink{
+    margin: auto;
+    font-size: 0.6em;
+    text-decoration: solid;
+    margin-top: 10px;
+}
+.tinyLink a{
+    margin: 10px;
+    text-decoration: underline;
 }
