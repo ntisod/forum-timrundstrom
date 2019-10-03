@@ -37,7 +37,7 @@
     <section class="wrapper">
         <article class="main">
             <?php 
-                for ($x = 0; $x < 7; $x++) {
+                for ($x = 0; $x < 4; $x++) {
                     include 'templates/post-flow.php';
                 }
             ?> 

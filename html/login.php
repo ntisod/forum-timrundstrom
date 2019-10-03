@@ -28,8 +28,10 @@
         <article class="main">
             <div class="flex-container">
                 <form action="" method="get" class="center loginfield flex-container">
-                    <div class="search">Username: <input type="text" name="" id=""></div>
-                    <div class="search">Password: <input type="password" name="" id=""></div>
+                    <div class="search">Username: </div>
+                    <input type="text" name="" id="">
+                    <div class="search">Password: </div>
+                    <input type="password" name="" id="">
                     <div class="checkbox"><input type="checkbox" name="" id=""> Keep me logged in.</div>
                     <input type="submit" value="Login" class="loginBtn">
                     <div class="tinyLink"><a href="">Forgot Password?</a><a href="">Create Account</a></div>
