@@ -1,0 +1,178 @@
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/*  Header  */
+.header-item{
+    margin-left: 20px;
+}
+.logo{
+    margin-top: 5px;
+    height: 65px;
+    width: 65px;
+}
+.title{
+    text-align: center;
+    font-size: 0.9em;
+}
+
+/*  Navbar + footer  */
+.navbar-item{
+    background-color: #333333;
+    color: white;
+    padding: 16px;
+    text-align: center;
+}
+.navbar-item:hover {
+    background-color: #111111;
+    cursor: pointer;
+}
+footer{
+    width: 100%;
+}
+.freeze-footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+
+/*  Search section  */
+h2{
+    text-align: center;
+    font-size: 2em;
+}
+.center{
+    margin: auto;
+}
+#sortBy{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/*  Link styling   */
+a{
+    text-decoration: none;
+    color: white;
+}
+h1, .post{
+    color: black;
+}
+
+/*  Main section    */
+.wrapper > *{
+    margin-top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.aside img{
+    display: none;
+    width: 200px;
+    height: 400px;
+    padding-bottom: 70px;
+}
+
+/*  Post feed   */
+.main{
+    width: 90%;
+}
+.post{
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 10px;
+}
+.post:hover{
+    background-color: #eee;
+    cursor: pointer;
+}
+.post h3{
+    font-size: 1.5em;
+}
+.post p{
+    font-size: 1em;
+}
+span{
+    font-size: 0.8em;
+    font-weight: normal;
+}
+
+
+
+/*  Buttons */
+
+.buttons{
+    text-align: center;
+    padding-bottom: 30px;
+    padding-top: 30px;
+}
+
+a.button {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 50%;
+} 
+.button {
+    background-color: rgb(180, 80, 180);
+    color: white;
+}
+.button:hover{
+    background-color: rgb(150, 0, 150);
+}
+.number{
+    background-color: #f1f1f1;
+    color: black;
+}
+.number:hover{
+    background-color: #ddd;
+}
+.buttons p{
+    display: inline-block;
+}
+.selected{
+    border: 2px solid rgb(180, 80, 180);
+}
+
+/*  Login   */
+.loginfield{
+    flex-direction: column;
+    background-color: #333333;
+    color: white;
+    font-size: 1.3em;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.loginfield > *{
+    margin-top: 10px;
+}
+.checkbox input{
+    width: 20px;
+    height: 20px;
+}
+.checkbox{
+    font-size: 0.8em;
+}
+.loginBtn{
+    height: 40px;
+    font-size: 0.8em;
+    font-family: 'Montserrat', sans-serif;
+}
+.search input{
+    height: 20px;
+    font-size: 1em;
+    font-family: 'Montserrat', sans-serif;
+}
+.tinyLink{
+    margin: auto;
+    font-size: 0.6em;
+    text-decoration: solid;
+    margin-top: 10px;
+}
+.tinyLink a{
+    margin: 10px;
+    text-decoration: underline;
+}
