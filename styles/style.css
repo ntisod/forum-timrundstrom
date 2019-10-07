@@ -4,6 +4,9 @@ body{
     margin: 0;
     padding: 0;
 }
+nav a, footer a{
+    text-decoration: none;
+}
 .dark{
     background-color: #333333;
 }
@@ -18,4 +21,10 @@ body{
 }
 .go:hover{
     background-color: rgb(180, 80, 180);
+}
+.form{
+    width: 20%;
+    color: white;
+    margin: auto;
+    margin-top: 20px;
 }
