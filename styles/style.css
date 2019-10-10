@@ -19,3 +19,6 @@ body{
 .go:hover{
     background-color: rgb(180, 80, 180);
 }
+a:hover{
+    cursor: pointer;
+}
