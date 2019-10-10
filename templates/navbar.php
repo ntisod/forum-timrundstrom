@@ -1,6 +1,6 @@
 
 <nav class="w3-bar dark">
-        <a class="w3-bar-item white">Home</a>
+        <a class="w3-bar-item white" href="..">Home</a>
         <a class="w3-bar-item white">New Post</a>
         <a class="w3-bar-item white">Profile</a>
         <input type="search" name="" id="" placeholder="Search" class="w3-bar-item w3-gray">

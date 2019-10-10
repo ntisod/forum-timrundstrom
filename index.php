@@ -16,9 +16,7 @@
     </header>
     <?php include './templates/navbar.php'; ?>
 
-    <section class="w3-container w3-center">
-        <h2>Posts</h2>
-    </section>
+    <h2 class="w3-center">Posts</h2>
 
     <?php include './templates/footer.php'; ?>
 </body>

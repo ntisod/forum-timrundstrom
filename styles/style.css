@@ -4,6 +4,9 @@ body{
     margin: 0;
     padding: 0;
 }
+nav a, footer a{
+    text-decoration: none;
+}
 .dark{
     background-color: #333333;
 }
@@ -21,4 +24,10 @@ body{
 }
 a:hover{
     cursor: pointer;
+}
+.form{
+    width: 20%;
+    color: white;
+    margin: auto;
+    margin-top: 20px;
 }
