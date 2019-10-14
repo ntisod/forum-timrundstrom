@@ -20,11 +20,17 @@
     <form action="_self" method="post">
         <fieldset class="w3-container dark form">
             <label for="username">Username:</label><br>
-            <input type="email" name="name"><br>
+            <input type="text" name="username"><br>
             <label for="email">Email:</label><br>
-            <input type="text" name="email"><br>
+            <input type="email" name="email"><br>
             <label for="password">Password:</label><br>
-            <input type="password" name="password" id=""><br>
+            <input type="password" name="password"><br>
+            <label for="confpassword">Confirm Password:</label><br>
+            <input type="password" name="confpassword"><br>
+            <label for="gender">Gender:</label><br>
+            <input type="radio" name="gender" value="male">Male<br>
+            <input type="radio" name="gender" value="female">Female<br>
+            <input type="radio" name="gender" value="other">Other<br>
             <input type="submit" value="Sign Up" class="sumbit">
         </fieldset> 
     </form>
