@@ -23,6 +23,9 @@ nav a, footer a{
 .go:hover{
     background-color: rgb(180, 80, 180);
 }
+a:hover{
+    cursor: pointer;
+}
 .form{
     width: 20%;
     color: white;
