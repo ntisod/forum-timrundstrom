@@ -26,31 +26,44 @@
             if (empty($_POST["username"])) {
                 $nameErr = "Username is required";
             } else {
-                //$name = test_input($_POST["username"]);
+                $name = test_input($_POST["username"]);
             }
 
             if (empty($_POST["email"])) {
                 $emailErr = "Email is required";
             } else {
-                //$email = test_input($_POST["email"]);
+                $email = test_input($_POST["email"]);
             }
 
             if (empty($_POST["password"])) {
                 $passwordErr = "Password is required";
             } else {
-                //$password = test_input($_POST["password"]);
+                $password = test_input($_POST["password"]);
             }
 
             if ($_POST["password"] == $_POST["confpassword"]) {
-                //$confpassword = test_input($_POST["confpassword"]);
+                $confpassword = test_input($_POST["confpassword"]);
             } else {
                 $confpasswordErr = "Password does not match";
             }
 
         }
-        
+        function test_input($data) {
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+            return $data;
+        }
     ?>
+    <?php
 
+    echo "Your mail is: " . $_POST["email"] . "<br>";
+    echo "Your password is: " . $_POST["password"] . "<br>";
+    echo "Your website is: " . $_POST["website"] . "<br>";
+    echo "Your comment is: " . $_POST["comment"] . "<br>";
+    echo "Your gender is: " . $_POST["gender"] . "<br>";
+
+    ?>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
         <fieldset class="w3-container dark form">
@@ -69,14 +82,16 @@
             <label for="website">Website:</label><br>
             <input type="url" name="website"><br>
             <label for="comment">Comment:</label><br>
-            <input type="text" name="comment"><br>
+            <textarea name="comment" rows="5" cols="40"> </textarea><br>
             <label for="gender">Gender:</label><br>
-            <input type="radio" name="gender" value="male">Male<br>
+            <input type="radio" name="gender" value="male" checked>Male<br>
             <input type="radio" name="gender" value="female">Female<br>
             <input type="radio" name="gender" value="other">Other<br>
             <input type="submit" value="Sign Up" class="sumbit">
         </fieldset> 
     </form>
+
+    
 
     <?php include '../templates/footer.php'; ?>
 </body>
