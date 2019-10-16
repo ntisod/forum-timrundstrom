@@ -31,10 +31,19 @@ a:hover{
     color: white;
     margin: auto;
     margin-top: 20px;
+    margin-bottom: 100px; /*ändra jao, fett scuff*/
 }
 .profilePic{
     border: 0px solid black;
     border-radius: 50%;
     width: 200px;
     height: 200px;
+}
+
+.errortxt{
+    color: red;
+    font-size: 0.8em;
+    margin: 0;
+    margin-bottom: -20px; /*SCUFF*/
+    padding: 0;
 }
