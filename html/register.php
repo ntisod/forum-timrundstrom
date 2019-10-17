@@ -18,25 +18,28 @@
     <h2 class="w3-center">Create Account</h2>
 
     <?php
-        $nameErr = $emailErr = $passwordErr = $confpasswordErr = $websiteErr = $genderErr = "";
-        $name = $email = $password = $confpassword = $website = $gender = "";
+        $nameErr = $emailErr = $passwordErr = $confpasswordErr = $genderErr = "";
+        $name = $email = $password = $confpassword = $website = $comment = $gender = "";
+        $redirect = true;
         
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
             if (empty($_POST["username"])) {
                 $nameErr = "Username is required";
+                $redirect = false;
             } else {
                 $name = test_input($_POST["username"]);
             }
 
             if (empty($_POST["email"])) {
                 $emailErr = "Email is required";
+                $redirect = false;
             } else {
                 $email = test_input($_POST["email"]);
             }
 
             if (empty($_POST["password"])) {
                 $passwordErr = "Password is required";
+                $redirect = false;
             } else {
                 $password = test_input($_POST["password"]);
             }
@@ -45,53 +48,89 @@
                 $confpassword = test_input($_POST["confpassword"]);
             } else {
                 $confpasswordErr = "Password does not match";
+                $redirect = false;
             }
 
+            if (isset($_POST["gender"])){
+                $gender = $_POST["gender"];
+            } else{
+                $genderErr = "Gender is required";
+                $redirect = false;
+            }
+
+            $website = test_input($_POST["website"]);
+            $comment = test_input($_POST["comment"]);
+
         }
+
         function test_input($data) {
             $data = trim($data);
             $data = stripslashes($data);
             $data = htmlspecialchars($data);
             return $data;
         }
-    ?>
-    <?php
 
-    echo "Your mail is: " . $_POST["email"] . "<br>";
-    echo "Your password is: " . $_POST["password"] . "<br>";
-    echo "Your website is: " . $_POST["website"] . "<br>";
-    echo "Your comment is: " . $_POST["comment"] . "<br>";
-    echo "Your gender is: " . $_POST["gender"] . "<br>";
+        function CompleteForm(){
+            if ($redirect){
+                return -1; //Go to welcome.php
+            } else {
+                return htmlspecialchars($_SERVER["PHP_SELF"]); //Stay
+            }
+        }
+
+        echo "OBS. endast här för att se att saker och ting fungerar: <br>";
+        echo "Your username is: " . $name . "<br>";
+        echo "Your mail is: " . $email . "<br>";
+        echo "Your password is: " . $password . "<br>";
+        echo "Your website is: " . $website . "<br>";
+        echo "Your comment is: " . $comment . "<br>";
+        echo "Your gender is: " . $gender . "<br>";
+        if ($redirect){
+            echo "Redirect is: true <br>";
+        } else {
+            echo "Redirect is: false <br>";
+        }
 
     ?>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
         <fieldset class="w3-container dark form">
+
             <label for="username">*Username:</label><br>
-            <input type="text" name="username"><br>
+            <input type="text" name="username" value="<?php echo $name ?>"><br>
             <?php echo "<p class=\"errortxt\">" . $nameErr . "</p>" ?><br>
+
             <label for="email">*Email:</label><br>
-            <input type="email" name="email"><br>
+            <input type="email" name="email" value="<?php echo $email ?>"><br>
             <?php echo "<p class=\"errortxt\">" . $emailErr . "</p>" ?><br>
+
             <label for="password">*Password:</label><br>
             <input type="password" name="password"><br>
             <?php echo "<p class=\"errortxt\">" . $passwordErr . "</p>" ?><br>
+
             <label for="confpassword">*Confirm Password:</label><br>
             <input type="password" name="confpassword"><br>
             <?php echo "<p class=\"errortxt\">" . $confpasswordErr . "</p>" ?><br>
+
             <label for="website">Website:</label><br>
-            <input type="url" name="website"><br>
+            <input type="url" name="website" value="<?php echo $website ?>"><br>
+
             <label for="comment">Comment:</label><br>
-            <textarea name="comment" rows="5" cols="40"> </textarea><br>
-            <label for="gender">Gender:</label><br>
-            <input type="radio" name="gender" value="male" checked>Male<br>
-            <input type="radio" name="gender" value="female">Female<br>
-            <input type="radio" name="gender" value="other">Other<br>
+            <textarea name="comment" rows="5" cols="40"><?php echo $comment ?></textarea><br>
+
+            <label for="gender">*Gender:</label><br>
+            <?php echo "<p class=\"errortxt\">" . $genderErr . "</p>" ?><br>
+            <input type="radio" name="gender" value="male" 
+            <?php if (isset($gender) && $gender == "male") echo "checked" ?>>Male<br>
+            <input type="radio" name="gender" value="female" 
+            <?php if (isset($gender) && $gender == "female") echo "checked" ?>>Female<br>
+            <input type="radio" name="gender" value="other" 
+            <?php if (isset($gender) && $gender == "other") echo "checked" ?>>Other<br>
+
             <input type="submit" value="Sign Up" class="sumbit">
+
         </fieldset> 
     </form>
-
-    
 
     <?php include '../templates/footer.php'; ?>
 </body>
