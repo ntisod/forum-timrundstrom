@@ -19,20 +19,24 @@
     <h2 class="w3-center">Welcome! <?php if(isset($_POST["username"])) echo $_POST["username"]; ?></h2>
     <?php
         if (isset($_POST["email"])){
-            echo "Your mail is: " . $_POST["email"] . "<br>";
+            echo "<p>Your mail is: " . $_POST["email"] . "<br>";
         }
         if (isset($_POST["password"])){
-            echo "Your mail is: " . $_POST["password"] . "<br>";
+            echo "Your password is: " . $_POST["password"] . "<br>";
         }
         if (isset($_POST["website"])){
-            echo "Your mail is: " . $_POST["website"] . "<br>";
+            echo "Your website is: " . $_POST["website"] . "<br>";
         }
         if (isset($_POST["comment"])){
-            echo "Your mail is: " . $_POST["comment"] . "<br>";
+            echo "Your comment is: " . $_POST["comment"] . "<br>";
         }
         if (isset($_POST["gender"])){
-            echo "Your mail is: " . $_POST["gender"] . "<br>";
+            echo "Your gender is: " . $_POST["gender"] . "</p>";
         }
+
+        echo "<p>You created your account on " . date("Y-m-d") . " at " . date("H:i") . "</p>";
+        $d=mktime(14, 00, 00, 8, 21, 2019);
+        echo "<p>This website started on " . date("Y-m-d", $d) . " at " . date("H:i", $d) . "</p>"
     ?>
 
     <?php include '../templates/footer.php'; ?>
