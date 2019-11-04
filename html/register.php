@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="../styles/style.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="shortcut icon" href="../pictures/favicon.ico"/>
     <title>NTI Forum</title>
 </head>
 <body>
@@ -18,13 +19,14 @@
 
     <?php
         // Declare empty variables.
-        $emailErr = $passwordErr = $confpasswordErr = $genderErr = "";
+        $emailErr = $passwordErr = $confpasswordErr = $genderErr = $pictureError = "";
         $email = $password = $confpassword = $website = $gender = "";
+        $target_dir = "../pictures/profile-pictures/";
         $err = false;
         
         // Controll values, set error if faulty inputs
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
+            
             if (empty($_POST["email"])) {
                 $emailErr = "Email is required";
                 $err = true;
@@ -53,14 +55,44 @@
                 $err = true;
             }
 
+            // Set variables for file upload
+            $target_file = $target_dir . $email . ".jpg";
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+            $check = getimagesize($_FILES["file"]["tmp_name"]);
+            // Check if uploaded file is a picture
+            if ($check == false){
+                $pictureError = "File is not a picture";
+                $err = true;
+            }
+            // Check if filesize is over 50kb
+            if ($_FILES["file"]["size"] > 50000){
+                $pictureError = "Sorry, your file is too large";
+                $err = true;
+            }
+            // Check image filetype, onlu jpg, jpeg, png and gif files are allowed
+            if ($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "png" && $imageFileType != "gif"){
+                $pictureError = "Only JPG, JPEG, PNG and GIF files are allowed";
+                $err = true;
+            }
+
             $website = test_input($_POST["website"]);
 
             if (!$err){
                 // No errors, display welcome and save account
 
+                // Check if profile picture already exists
+                if (file_exists($target_file)){
+                    unlink($target_file); // If so, delete it.
+                }
+                // Upload new file
+                if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)){
+                    echo "<p>The file " . basename($_FILES["file"]["name"]) . " has been uploaded</p>";
+                }
+
                 date_default_timezone_set("Europe/Stockholm"); // Set timezone
                 $file = fopen("../textfiles/accounts.txt", "a+"); // open file
-                fwrite($file, date("Y-m-d H:i:s") . ",{$email},{$password},{$gender},{$website}\n"); // Save information
+                $txt = date("Y-m-d H:i:s") . ",{$email},{$password},{$gender},{$website}\n";
+                fwrite($file, $txt) // Save information
                 fclose($file); // close file
 
                 // Display welcome
