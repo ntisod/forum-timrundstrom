@@ -2,12 +2,12 @@
 <form action="<?php echo $_SERVER["PHP_SELF"];?>" method="post" enctype="multipart/form-data">
     <fieldset class="w3-container dark form">
         
-        <label for="file">Profile Picture:</label><br>
+        <label for="file">*Profile Picture:</label><br>
         <input type="file" name="file">
         <?php echo "<p class=\"errortxt\">" . $pictureError . "</p>" ?><br>
 
         <label for="email">*Email:</label><br>
-        <input type="email" name="email" placeholder="E-mail" value="<?php echo $email ?>"><br>
+        <input type="email" name="email" placeholder="E-mail" value="<?php echo $email; ?>"><br>
         <?php echo "<p class=\"errortxt\">" . $emailErr . "</p>" ?><br>
 
         <label for="password">*Password:</label><br>

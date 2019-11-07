@@ -22,6 +22,8 @@
         $emailErr = $passwordErr = $confpasswordErr = $genderErr = $pictureError = "";
         $email = $password = $confpassword = $website = $gender = "";
         $target_dir = "../pictures/profile-pictures/";
+        $cookie_name = "email";
+        $cookie_value = "";
         $err = false;
         
         // Controll values, set error if faulty inputs
@@ -32,6 +34,7 @@
                 $err = true;
             } else {
                 $email = test_input($_POST["email"]);
+                $cookie_value = test_input($_POST["email"]);
             }
 
             if (empty($_POST["password"])) {
@@ -69,7 +72,7 @@
                 $pictureError = "Sorry, your file is too large";
                 $err = true;
             }
-            // Check image filetype, onlu jpg, jpeg, png and gif files are allowed
+            // Check image filetype, only jpg, jpeg, png and gif files are allowed
             if ($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "png" && $imageFileType != "gif"){
                 $pictureError = "Only JPG, JPEG, PNG and GIF files are allowed";
                 $err = true;
@@ -89,14 +92,20 @@
                     echo "<p>The file " . basename($_FILES["file"]["name"]) . " has been uploaded</p>";
                 }
 
+                // Create a cookie
+                setcookie($cookie_name, $cookie_value, time() + 86400 * 30, "/");
+
                 date_default_timezone_set("Europe/Stockholm"); // Set timezone
                 $file = fopen("../textfiles/accounts.txt", "a+"); // open file
                 $txt = date("Y-m-d H:i:s") . ",{$email},{$password},{$gender},{$website}\n";
-                fwrite($file, $txt) // Save information
+                fwrite($file, $txt); // Save information
                 fclose($file); // close file
 
                 // Display welcome
-                echo "<h2 class=\"w3-center\">Welcome {$email}!</h2>"; 
+                echo "<h2 class=\"w3-center\">Welcome {$email}!</h2>";
+                if (isset($_COOKIE[$cookie_name])){
+                    echo "<p>Cookie " . $cookie_name . " is set!</p>";
+                }
                 // Display time of account creation
                 echo "<p>You created your account on " . date("Y-m-d") . " at " . date("H:i") . "</p>"; 
             } else {
