@@ -30,7 +30,7 @@
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             if (empty($_POST["email"])) {
-                $emailErr = "Email is required";
+                $emailErr = "E-post krävs";
                 $err = true;
             } else {
                 $email = test_input($_POST["email"]);
@@ -38,7 +38,7 @@
             }
 
             if (empty($_POST["password"])) {
-                $passwordErr = "Password is required";
+                $passwordErr = "Lösenord krävs";
                 $err = true;
             } else {
                 $password = test_input($_POST["password"]);
@@ -47,14 +47,14 @@
             if ($_POST["password"] == $_POST["confpassword"]) {
                 $confpassword = test_input($_POST["confpassword"]);
             } else {
-                $confpasswordErr = "Password does not match";
+                $confpasswordErr = "Lösenord matchar inte";
                 $err = true;
             }
 
             if (isset($_POST["gender"])){
                 $gender = $_POST["gender"];
             } else{
-                $genderErr = "Gender is required";
+                $genderErr = "Kön krävs";
                 $err = true;
             }
 
@@ -64,17 +64,17 @@
             $check = getimagesize($_FILES["file"]["tmp_name"]);
             // Check if uploaded file is a picture
             if ($check == false){
-                $pictureError = "File is not a picture";
+                $pictureError = "Filen är inte en bild";
                 $err = true;
             }
             // Check if filesize is over 50kb
             if ($_FILES["file"]["size"] > 50000){
-                $pictureError = "Sorry, your file is too large";
+                $pictureError = "Förlåt, men din fil är för stor (max 50kb)";
                 $err = true;
             }
             // Check image filetype, only jpg, jpeg, png and gif files are allowed
             if ($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "png" && $imageFileType != "gif"){
-                $pictureError = "Only JPG, JPEG, PNG and GIF files are allowed";
+                $pictureError = "Endast JPG, JPEG, PNG and GIF files är tillåtna";
                 $err = true;
             }
 
@@ -89,34 +89,36 @@
                 }
                 // Upload new file
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)){
-                    echo "<p>The file " . basename($_FILES["file"]["name"]) . " has been uploaded</p>";
+                    echo "<p>Filen " . basename($_FILES["file"]["name"]) . " har laddats upp</p>";
                 }
 
                 // Create a cookie
                 setcookie($cookie_name, $cookie_value, time() + 86400 * 30, "/");
 
                 date_default_timezone_set("Europe/Stockholm"); // Set timezone
+
                 $file = fopen("../textfiles/accounts.txt", "a+"); // open file
                 $txt = date("Y-m-d H:i:s") . ",{$email},{$password},{$gender},{$website}\n";
                 fwrite($file, $txt); // Save information
+                
                 fclose($file); // close file
 
                 // Display welcome
-                echo "<h2 class=\"w3-center\">Welcome {$email}!</h2>";
+                echo "<h2 class=\"w3-center\">Välkommen {$email}!</h2>";
                 if (isset($_COOKIE[$cookie_name])){
-                    echo "<p>Cookie " . $cookie_name . " is set!</p>";
+                    echo "<p>" . $cookie_name . " cookie har skapats!</p>";
                 }
                 // Display time of account creation
-                echo "<p>You created your account on " . date("Y-m-d") . " at " . date("H:i") . "</p>"; 
+                echo "<p>Du skapade ditt konto den " . date("Y-m-d") . ", klockan " . date("H:i") . "</p>"; 
             } else {
                 // error occured, create an account, show error messages
-                echo "<h2 class=\"w3-center\">Create Account</h2>";
+                echo "<h2 class=\"w3-center\">Registrera</h2>";
                 require '../templates/userdata.php';
             }
 
         } else {
             // First time visiting, create an account
-            echo "<h2 class=\"w3-center\">Create Account</h2>";
+            echo "<h2 class=\"w3-center\">Registrera</h2>";
             require '../templates/userdata.php';
         }
 
