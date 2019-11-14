@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -32,7 +33,7 @@
                 $err = true;
             } else {
                 $email = test_input($_POST["email"]);
-                $cookie_value = test_input($_POST["email"]);
+                $cookie_value = test_input($_POST["email"]); // Set cookie value
 
             }
 
@@ -67,17 +68,19 @@
             }
 
             if (!$err){
-                // No errors, display welcome
+                // No errors, display welcome site
 
                 // Create a cookie
                 setcookie($cookie_name, $cookie_value, time() + 86400 * 30, "/");
+                // Set session
+                $_SESSION["account"] = $email;
 
-                // Display welcome
-                echo "<h2 class=\"w3-center\">Välkommen {$email}!</h2>";
+                // Display welcome message
+                echo "<h2 class=\"w3-center\">Välkommen {$_SESSION["account"]}!</h2>";
                 if (isset($_COOKIE[$cookie_name])){
-                    echo "<p>" . $cookie_name . " cookie har skapats!</p>";
+                    echo "<p class=\"w3-center\">" . $cookie_name . " cookie har skapats!</p>";
                 }
-                // Display time of account creation
+                // Display time of account creation?
 
             } else {
                 // error occured, login, show error messages

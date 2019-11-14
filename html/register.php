@@ -106,10 +106,10 @@
                 // Display welcome
                 echo "<h2 class=\"w3-center\">Välkommen {$email}!</h2>";
                 if (isset($_COOKIE[$cookie_name])){
-                    echo "<p>" . $cookie_name . " cookie har skapats!</p>";
+                    echo "<p class=\"w3-center\">" . $cookie_name . " cookie har skapats!</p>";
                 }
                 // Display time of account creation
-                echo "<p>Du skapade ditt konto den " . date("Y-m-d") . ", klockan " . date("H:i") . "</p>"; 
+                echo "<p class=\"w3-center\">Du skapade ditt konto den " . date("Y-m-d") . ", klockan " . date("H:i") . "</p>"; 
             } else {
                 // error occured, create an account, show error messages
                 echo "<h2 class=\"w3-center\">Registrera</h2>";
