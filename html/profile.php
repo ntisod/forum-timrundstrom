@@ -15,11 +15,10 @@
         <!--img src="./pictures/nti-logo-black.png" alt="Svart NTI logga"-->
         <h1>NTI Forum</h1>
     </header>
-    <?php include '../templates/navbar.php'; ?>
 
-    <h2 class="w3-center">Konto</h2>
+    <?php include '../templates/navbar.php'; 
 
-    <?php 
+    echo "<h2 class=\"w3-center\">Konto</h2>";
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         session_unset();
@@ -29,21 +28,25 @@
 
     if (isset($_SESSION["account"])){
 
-        echo "<div class=\"w3-center\"><img class=\"profilePic\" src=\"../pictures/profile-pictures/{$_SESSION["account"]}.jpg\" /></div>";
-        echo "<p class=\"w3-center\">Välkommen {$_SESSION["account"]}!</p>";
+        echo <<<HTML
+        <div class="w3-center"><img class="profilePic" src="../pictures/profile-pictures/{$_SESSION['account']}.jpg" /></div> 
+        <p class="w3-center">Välkommen {$_SESSION["account"]}!</p>
         
+        <form action="{$_SERVER['PHP_SELF']}" method="post" class="w3-center">
+        <input type="submit" value="Logga ut" class="submit">
+        </form>
+HTML;
+
+    } else {
+        echo <<<HTML
+        <p class="w3-center"> Vänligen logga in </p>
+        <form action="./login.php" method="get" class="w3-center">
+        <input type="submit" value="Logga in" class="submit">
+        </form>
+HTML;
     }
-    ?>
-
-    <form action="<?php echo $_SERVER["PHP_SELF"];?>" method="post" class="w3-center">
-       
-        <input type="submit" value="Logga ut" class="sumbit">
-
-    </form>
     
+    include '../templates/footer.php'; ?>
 
-
-
-    <?php include '../templates/footer.php'; ?>
 </body>
 </html>

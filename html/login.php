@@ -54,8 +54,10 @@
                     $account = fgets($file);
                     $account_array = explode(",", $account);
                     // If the saved account matches user inputs, then set matching_account to true
-                    if ($account_array[1] == $email && $account_array[2] == $password){
-                        $matching_account = true;
+                    if (isset($account_array[1]) && isset($account_array[2])){
+                        if ($account_array[1] == $email && $account_array[2] == $password){
+                            $matching_account = true;
+                        }
                     }
                 }
 
@@ -73,6 +75,7 @@
                 // Create a cookie
                 setcookie($cookie_name, $cookie_value, time() + 86400 * 30, "/");
                 // Set session
+                session_regenerate_id();
                 $_SESSION["account"] = $email;
 
                 // Display welcome message
@@ -89,9 +92,11 @@
             }
 
         } else {
+            
             // First time visiting, login
             echo "<h2 class=\"w3-center\">Logga in</h2>";
             require '../templates/signin.php';
+
         }
 
         // Test inputs, trim, strip slashes and htmlspecialchars

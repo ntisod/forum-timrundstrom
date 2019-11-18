@@ -98,7 +98,7 @@
                 date_default_timezone_set("Europe/Stockholm"); // Set timezone
 
                 $file = fopen("../textfiles/accounts.txt", "a+"); // open file
-                $txt = date("Y-m-d H:i:s") . ",{$email},{$password},{$gender},{$website}\n";
+                $txt = "\n" . date("Y-m-d H:i:s") . ",{$email},{$password},{$gender},{$website}";
                 fwrite($file, $txt); // Save information
                 
                 fclose($file); // close file
