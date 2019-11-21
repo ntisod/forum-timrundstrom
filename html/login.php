@@ -25,6 +25,10 @@
         $cookie_value = "";
         $err = false;
         
+        if (isset($_SESSION["account"])){
+            header('Location: ./profile.php');
+        }
+
         // Controll values, set error if faulty inputs
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
@@ -78,12 +82,7 @@
                 session_regenerate_id();
                 $_SESSION["account"] = $email;
 
-                // Display welcome message
-                echo "<h2 class=\"w3-center\">Välkommen {$_SESSION["account"]}!</h2>";
-                if (isset($_COOKIE[$cookie_name])){
-                    echo "<p class=\"w3-center\">" . $cookie_name . " cookie har skapats!</p>";
-                }
-                // Display time of account creation?
+                header('Location: ./profile.php');
 
             } else {
                 // error occured, login, show error messages

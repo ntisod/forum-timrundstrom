@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -58,24 +59,25 @@
                 $err = true;
             }
 
-            // Set variables for file upload
-            $target_file = $target_dir . $email . ".jpg";
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-            $check = getimagesize($_FILES["file"]["tmp_name"]);
-            // Check if uploaded file is a picture
-            if ($check == false){
-                $pictureError = "Filen är inte en bild";
-                $err = true;
-            }
-            // Check if filesize is over 50kb
-            if ($_FILES["file"]["size"] > 50000){
-                $pictureError = "Förlåt, men din fil är för stor (max 50kb)";
-                $err = true;
-            }
-            // Check image filetype, only jpg, jpeg, png and gif files are allowed
-            if ($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "png" && $imageFileType != "gif"){
-                $pictureError = "Endast JPG, JPEG, PNG and GIF files är tillåtna";
-                $err = true;
+            if (isset($_POST["file"])){
+                $target_file = $target_dir . $email . ".jpg";
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                $check = getimagesize($_FILES["file"]["tmp_name"]);
+                // Check if uploaded file is a picture
+                if ($check == false){
+                    $pictureError = "Filen är inte en bild";
+                    $err = true;
+                }
+                // Check if filesize is over 50kb
+                if ($_FILES["file"]["size"] > 50000){
+                    $pictureError = "Förlåt, men din fil är för stor (max 50kb)";
+                    $err = true;
+                }
+                // Check image filetype, only jpg, jpeg, png and gif files are allowed
+                if ($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "png" && $imageFileType != "gif"){
+                    $pictureError = "Endast JPG, JPEG, PNG and GIF files är tillåtna";
+                    $err = true;
+                }
             }
 
             $website = test_input($_POST["website"]);
@@ -83,17 +85,32 @@
             if (!$err){
                 // No errors, display welcome and save account
 
-                // Check if profile picture already exists
-                if (file_exists($target_file)){
-                    unlink($target_file); // If so, delete it.
-                }
-                // Upload new file
-                if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)){
-                    echo "<p>Filen " . basename($_FILES["file"]["name"]) . " har laddats upp</p>";
+                // If a picture was chosen
+                if (isset($_POST["file"])){
+                    // Check if profile picture already exists
+                    if (file_exists($target_file)){
+                        unlink($target_file); // If so, delete it.
+                    }
+                    // Upload new file
+                    if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)){
+                        echo "<p>Filen " . basename($_FILES["file"]["name"]) . " har laddats upp</p>";
+                    }
+                } else {
+                    // Set default picture
+                    $file = "../pictures/profile.png";
+                    $newfile = "../pictures/profile-pictures/" . $email . ".jpg";
+
+                    if (!copy($file, $newfile)) {
+                        echo "failed to copy";
+                    }
                 }
 
                 // Create a cookie
                 setcookie($cookie_name, $cookie_value, time() + 86400 * 30, "/");
+
+                // Set session
+                session_regenerate_id();
+                $_SESSION["account"] = $email;
 
                 date_default_timezone_set("Europe/Stockholm"); // Set timezone
 
@@ -117,6 +134,7 @@
             }
 
         } else {
+            
             // First time visiting, create an account
             echo "<h2 class=\"w3-center\">Registrera</h2>";
             require '../templates/userdata.php';

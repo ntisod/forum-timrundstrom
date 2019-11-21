@@ -21,8 +21,7 @@
     echo "<h2 class=\"w3-center\">Konto</h2>";
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        session_unset();
-        session_destroy();
+        header('Location: ../templates/logout.php');
     }
 
 
@@ -38,12 +37,7 @@
 HTML;
 
     } else {
-        echo <<<HTML
-        <p class="w3-center"> Vänligen logga in </p>
-        <form action="./login.php" method="get" class="w3-center">
-        <input type="submit" value="Logga in" class="submit">
-        </form>
-HTML;
+        header('Location: ./login.php');
     }
     
     include '../templates/footer.php'; ?>
