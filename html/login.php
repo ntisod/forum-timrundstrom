@@ -50,27 +50,39 @@
 
 
             if (!$err){
-                $file = fopen("../textfiles/accounts.txt", "r"); // open file
                 $matching_account = false;
+                
+                require("../includes/settings.php");
 
-                // Go through each line in .txt file
-                while(!feof($file)) {
-                    $account = fgets($file);
-                    $account_array = explode(",", $account);
-                    // If the saved account matches user inputs, then set matching_account to true
-                    if (isset($account_array[1]) && isset($account_array[2])){
-                        if ($account_array[1] == $email && $account_array[2] == $password){
+                // Look for account in DB TODO:
+                try {
+                    $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $dbpassword);
+                    // set the PDO error mode to exception
+                    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                    // Find existing user
+                    $stmt = $conn->prepare("SELECT email, password FROM users WHERE email='$email' LIMIT 1");
+                    $stmt->execute();
+                    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                    $result = $stmt->fetch();
+
+                    // HOW DO I GET EMAIL AND PASSWORD VALUES? TODO:
+                    if (!empty($result)){
+                        if (password_verify($password, $result['password'])){
                             $matching_account = true;
                         }
                     }
+                } catch(PDOException $e) {
+                    $err = true;
                 }
+
+                $conn = null;
 
                 // Set error to true and display message if there is no matching account
                 if (!$matching_account){
                     $accountErr = "E-post eller lösenord matchar inte";
                     $err = true;
                 }
-                fclose($file); // close file
             }
 
             if (!$err){

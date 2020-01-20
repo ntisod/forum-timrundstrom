@@ -59,34 +59,74 @@
                 $err = true;
             }
 
-            if (isset($_POST["file"])){
+            if (isset($_FILES["file"])){
                 $target_file = $target_dir . $email . ".jpg";
                 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-                $check = getimagesize($_FILES["file"]["tmp_name"]);
-                // Check if uploaded file is a picture
-                if ($check == false){
-                    $pictureError = "Filen är inte en bild";
-                    $err = true;
-                }
-                // Check if filesize is over 50kb
-                if ($_FILES["file"]["size"] > 50000){
-                    $pictureError = "Förlåt, men din fil är för stor (max 50kb)";
-                    $err = true;
-                }
-                // Check image filetype, only jpg, jpeg, png and gif files are allowed
-                if ($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "png" && $imageFileType != "gif"){
-                    $pictureError = "Endast JPG, JPEG, PNG and GIF files är tillåtna";
-                    $err = true;
+                $image_picked = false;
+
+                if (is_uploaded_file($_FILES["file"]["tmp_name"])){
+                    $image_picked = true;
+
+                    $check = getimagesize($_FILES["file"]["tmp_name"]);
+
+                    // Check if uploaded file is not a picture
+                    if ($check == false){
+                        $pictureError = "Filen är inte en bild";
+                        $err = true;
+                    }
+                    // Check if filesize is over 50kb
+                    if ($_FILES["file"]["size"] > 50000){
+                        $pictureError = "Förlåt, men din fil är för stor (max 50kb)";
+                        $err = true;
+                    }
+                    // Check image filetype, only jpg, jpeg, png and gif files are allowed
+                    if ($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "png" && $imageFileType != "gif"){
+                        $pictureError = "Endast JPG, JPEG, PNG and GIF files är tillåtna";
+                        $err = true;
+                    }
                 }
             }
 
-            $website = test_input($_POST["website"]);
+            if (!$err){
+                 require("../includes/settings.php");
+
+                 try {
+                    $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $dbpassword);
+                    // set the PDO error mode to exception
+                    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    
+                    $sql = "SELECT email from users WHERE email='$email'";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->execute();
+                    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                    $result = $stmt->fetch();
+                    
+                    if (empty($result)){
+                        //Encrypt password
+                        $hashed = password_hash($password, PASSWORD_DEFAULT);
+
+                        // Set new user
+                        $sql = "INSERT INTO users (email, password, gender, regdate)
+                        VALUES ('$email', '$hashed', '$gender', NOW())";
+                        // use exec() because no results are returned
+                        $conn->exec($sql);
+                    } else {
+                        $err = true;
+                    }
+                 } catch(PDOException $e) {
+                    $err = true;
+                    echo $e;
+                 }
+                 
+                 $conn = null;
+            }
 
             if (!$err){
                 // No errors, display welcome and save account
 
                 // If a picture was chosen
-                if (isset($_POST["file"])){
+                if (isset($_FILES["file"]) && $image_picked){
+
                     // Check if profile picture already exists
                     if (file_exists($target_file)){
                         unlink($target_file); // If so, delete it.
@@ -96,6 +136,7 @@
                         echo "<p>Filen " . basename($_FILES["file"]["name"]) . " har laddats upp</p>";
                     }
                 } else {
+
                     // Set default picture
                     $file = "../pictures/profile.png";
                     $newfile = "../pictures/profile-pictures/" . $email . ".jpg";
@@ -114,11 +155,13 @@
 
                 date_default_timezone_set("Europe/Stockholm"); // Set timezone
 
+                /*
+                // Save account
                 $file = fopen("../textfiles/accounts.txt", "a+"); // open file
                 $txt = "\n" . date("Y-m-d H:i:s") . ",{$email},{$password},{$gender},{$website}";
                 fwrite($file, $txt); // Save information
-                
                 fclose($file); // close file
+                */
 
                 // Display welcome
                 echo "<h2 class=\"w3-center\">Välkommen {$email}!</h2>";

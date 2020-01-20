@@ -1,16 +1,16 @@
 <?php
-$servername = "localhost";
-$username = "phpuser";
-$password = "oCEFYkel4eRuns8l";
+require("../includes/settings.php");
 
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=nti-forum-db", $username, $password);
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connected successfully";
-    $conn = null;
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-}
+    echo "Connected to DB succesfully!";
+    }
+catch(PDOException $e)
+    {
+    echo $sql . "<br>" . $e->getMessage();
+    }
 
+$conn = null;
 ?>

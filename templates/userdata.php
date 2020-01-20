@@ -9,13 +9,11 @@
         <label for="email">*E-post:</label><br>
         <input type="email" name="email" placeholder="E-mail" 
         value="<?php 
-        
         if ($email != "" || !isset($_COOKIE["email"])){
             echo $email;
         } else {
             echo $_COOKIE["email"];
         }
-
         ?>"><br>
         <?php echo "<p class=\"errortxt\">" . $emailErr . "</p>" ?><br>
 
@@ -26,9 +24,6 @@
         <label for="confpassword">*Bekräfta Lösenord:</label><br>
         <input type="password" name="confpassword" placeholder="Confirm Password"><br>
         <?php echo "<p class=\"errortxt\">" . $confpasswordErr . "</p>" ?><br>
-
-        <label for="website">Hemsida:</label><br>
-        <input type="url" name="website" placeholder="Website" value="<?php echo $website ?>"><br>
 
         <label for="gender">*Kön:</label><br>
         <?php echo "<p class=\"errortxt\">" . $genderErr . "</p>" ?><br>
