@@ -154,15 +154,7 @@
                 $_SESSION["account"] = $email;
 
                 date_default_timezone_set("Europe/Stockholm"); // Set timezone
-
-                /*
-                // Save account
-                $file = fopen("../textfiles/accounts.txt", "a+"); // open file
-                $txt = "\n" . date("Y-m-d H:i:s") . ",{$email},{$password},{$gender},{$website}";
-                fwrite($file, $txt); // Save information
-                fclose($file); // close file
-                */
-
+                
                 // Display welcome
                 echo "<h2 class=\"w3-center\">Välkommen {$email}!</h2>";
                 if (isset($_COOKIE[$cookie_name])){

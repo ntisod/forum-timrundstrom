@@ -19,6 +19,8 @@
 
     <h2 class="w3-center">Inlägg</h2>
 
+    //TODO: Visa senaste x antal inlägg
+
     <?php include './templates/footer.php'; ?>
 </body>
 </html>

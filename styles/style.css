@@ -33,6 +33,12 @@ a:hover{
     margin-top: 20px;
     margin-bottom: 100px; /*ändra jao, fett scuff*/
 }
+.title{
+    width: 100%;
+}
+.text{
+    width: 100%;
+}
 
 .profilePic{
     border: 3px solid rgb(150, 0, 150);
