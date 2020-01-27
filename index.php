@@ -12,15 +12,36 @@
 </head>
 <body>
     <header class="w3-container">
-        <!--img src="./pictures/nti-logo-black.png" alt="Svart NTI logga"-->
         <h1>NTI Forum</h1>
     </header>
-    <?php include './templates/navbar.php'; ?>
+    <?php include './templates/navbar.php';
 
-    <h2 class="w3-center">Inlägg</h2>
+    echo "<h2 class=\"w3-center\">Inlägg</h2>";
+    
+    // TODO: Visa senaste X antal inlägg
 
-    //TODO: Visa senaste x antal inlägg
+    require("./includes/settings.php");
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $dbpassword);
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    <?php include './templates/footer.php'; ?>
+        // Find existing user
+        $sql = "SELECT postID, title, text, user, date FROM posts ORDER BY date DESC LIMIT 10";
+        $stmt = $conn->query($sql);
+        while ($post = $stmt->fetch()) {
+
+            // TODO: Display each post e.g.:
+            echo $post['title']." - ".$post['date']."<br><br>";
+
+        }
+
+    } catch(PDOException $e) {
+    }
+    $conn = null;
+
+    include './templates/footer.php'; 
+    
+    ?>
 </body>
 </html>

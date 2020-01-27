@@ -57,13 +57,12 @@
 
 
                         // Set new user
-                        $sql = "INSERT INTO posts (title, text, user, date) VALUES ('$title', '$text', '$user', NOW())";
-                        
+                        $sql = "INSERT INTO posts(title, text, user, date) VALUES ('$title', '$text', '$user', NOW())";
                         // use exec() because no results are returned
                         $conn->exec($sql);
 
-                        //header('Location: ');
-                        echo $title . "<br>" . $text;
+                        $last_id = $conn->lastInsertId(); // Get the id of the new post
+                        header('Location: ./post.php?id=' . $last_id); // Go to view the new post
 
                     } catch(PDOException $e) {
                         $err = true;
