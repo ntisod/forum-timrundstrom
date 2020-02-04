@@ -54,3 +54,48 @@ a:hover{
     margin-bottom: -20px; /*SCUFF*/
     padding: 0;
 }
+
+.post{
+    width: 30%;
+    background-color: #333333;
+    color: white;
+    text-align: center;
+    margin: 25px auto;
+    border-bottom: 10px solid rgb(150, 0, 150);
+}
+.post:hover{
+    border-bottom: 10px solid #555555;
+    background-color: rgb(180, 80, 180);
+}
+.post>a{
+    text-decoration: none;
+    padding: 1px;
+}
+
+.pagebtns{
+    margin-top: 50px;
+}
+.pagebtn{
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+}
+
+.pagebtn:hover {
+background-color: #ddd;
+color: black;
+}
+
+.previous {
+background-color: #f1f1f1;
+color: black;
+}
+
+.next {
+background-color: rgb(150, 0, 150);
+color: white;
+}
+
+.round {
+border-radius: 50%;
+}

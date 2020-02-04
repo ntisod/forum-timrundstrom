@@ -63,12 +63,8 @@
             echo "<h2 class=\"w3-center\">Oops!</h2>";
             echo "<p class=\"w3-center\">Inget inlägg hittades</p>";
         } else {
-
-
             echo "<h2 class=\"w3-center\">$title</h2>";
             echo "<p class=\"w3-center\">$text <br>av: $author <br> $date</p>";
-
-
         }
     }
     
