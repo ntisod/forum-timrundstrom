@@ -1,5 +1,7 @@
 <?php
 // Deklaration av hemliga värden
+
+// Lokal XAMPP
 $servername = "localhost";
 $username = "phpuser";
 $dbpassword = "VXByeLbB7JCS9ets";
@@ -7,12 +9,11 @@ $dbname = "nti-forum-db";
 
 /*
 
-Domain settings
+// Domain settings
 
-Database:	te17tim_forum
-Host:	    localhost
-Username:	te17tim_phpuser
-Password:	VXByeLbB7JCS9ets
-
+$servername = "localhost";
+$username = "te17tim_phpuser";
+$dbpassword = "phZFr3gp";
+$dbname = "te17tim_forum";
 
 */

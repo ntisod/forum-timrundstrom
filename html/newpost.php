@@ -55,9 +55,16 @@
                         
                         $user = $_SESSION["account"];
 
+                        // Get email and userID
+                        $stmt = $conn->prepare("SELECT userID, email FROM users WHERE email='$user' LIMIT 1");
+                        $stmt->execute();
+                        $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                        $result = $stmt->fetch();
+                        $author = $result['email'];
+                        $userID = $result['userID'];
 
                         // Set new user
-                        $sql = "INSERT INTO posts(title, text, user, date) VALUES ('$title', '$text', '$user', NOW())";
+                        $sql = "INSERT INTO posts(title, text, userID, date, author) VALUES ('$title', '$text', '$userID', NOW(), '$author')";
                         // use exec() because no results are returned
                         $conn->exec($sql);
 

@@ -19,35 +19,43 @@
 
     echo "<h2 class=\"w3-center\">Inlägg</h2>";
 
-    $showperpage = 2;
-    if (empty($_GET['page'])){
+    // Get page number and page offset (for second page skip first $showperpage posts)
+    $showperpage = 5;
+    if (empty($_GET['page']) || !is_numeric($_GET['page'])){
         $page = 1;
     } else {
         $page = $_GET['page'];
     }
     $offset = ($page-1) * $showperpage;    
 
+    // Get posts
     require("./includes/settings.php");
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $dbpassword);
         // set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Find existing user
-        $sql = "SELECT postID, title, user, date FROM posts ORDER BY date DESC LIMIT ".$showperpage." OFFSET ".$offset;
+        // Find posts
+        $sql = "SELECT postID, title, date, author FROM posts ORDER BY date DESC LIMIT ".$showperpage." OFFSET ".$offset;
         $stmt = $conn->query($sql);
 
+        // Loop through all returned posts and display them on page
         while ($post = $stmt->fetch()) {
+            // Get post values
             $id = $post['postID'];
             $title = $post['title'];
-            $user = $post['user'];
+            $user = $post['author'];
             $date = $post['date']; // TODO: show time since rather than date
 
+            // Display the post
             echo <<<HTML
-                <div class="post">
-                    <a href="./html/post.php?id={$id}">
-                        <h3> {$title}</h3>
-                        <p> {$user} - {$date} </p>
+                <div class="postBox">
+                    <a href="./html/post.php?id={$id}" class="post">
+                        <div>
+                            <h3> {$title}</h3>
+                            <p> {$user} </p>
+                            <p> {$date} </p>
+                        </div>
                     </a>
                 </div>
             HTML;
@@ -56,14 +64,16 @@
 
     } catch(PDOException $e) {
     }
-    $conn = null;
+    $conn = null; // Close connection
 
-    $backpage = $page-1;
-    if ($backpage <= 0){
+    // Page button values
+    $backpage = $page-1; // Backpage is the page before the current page
+    if ($backpage <= 0){ // It cant be lower than 1
         $backpage = 1;
     }
-    $forwardpage = $page+1;
+    $forwardpage = $page+1; // Set next page (TODO: don't allow over limit)
     
+    // Display buttons
     echo <<<HTML
         <div class="w3-center pagebtns">
             <a href=".?page={$backpage}" class="pagebtn previous round">&#8249;</a>
@@ -71,8 +81,8 @@
         </div>
     HTML;
 
+    // Set the footer
     include './templates/footer.php'; 
-    
     ?>
 
 </body>

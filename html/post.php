@@ -40,7 +40,7 @@
                 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 // Find existing user
-                $stmt = $conn->prepare("SELECT postID, title, text, user, date FROM posts WHERE postID='$id' LIMIT 1");
+                $stmt = $conn->prepare("SELECT postID, title, text, author, date FROM posts WHERE postID='$id' LIMIT 1");
                 $stmt->execute();
                 $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
                 $result = $stmt->fetch();
@@ -48,7 +48,7 @@
                 if (!empty($result)){
                     $title = $result['title'];
                     $text = $result['text'];
-                    $author = $result['user'];
+                    $author = $result['author'];
                     $date = $result['date'];
                 } else {
                     $err = true;

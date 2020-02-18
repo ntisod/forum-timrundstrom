@@ -116,7 +116,9 @@
             $age = round($age, 0);
 
             echo <<<HTML
-            <div class="w3-center"><img class="profilePic" src="../pictures/profile-pictures/{$email}.jpg" /></div> 
+            <div class="w3-center profileContainer">
+                <img class="profilePic" src="../pictures/profile-pictures/{$email}.jpg" />
+            </div> 
             <h3 class="w3-center">{$email}!</h3>
             
             <p class="w3-center">Kontot är {$age} dagar gammalt.</p>

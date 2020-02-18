@@ -18,10 +18,11 @@ nav a, footer a{
     background-color: #111111;
 }
 .go{
-    background-color:rgb(150, 0, 150);
+    background-color: rgb(150, 0, 190);
 }
 .go:hover{
-    background-color: rgb(180, 80, 180);
+    /*background-color: rgb(180, 80, 180);*/
+    background-color:rgb(180, 0, 180);
 }
 a:hover{
     cursor: pointer;
@@ -39,14 +40,21 @@ a:hover{
 .text{
     width: 100%;
 }
-
-.profilePic{
-    border: 3px solid rgb(150, 0, 150);
+.profileContainer{
+    border: 0px solid black;
     border-radius: 50%;
     width: 150px;
     height: 150px;
+    background: linear-gradient(to left, rgb(180, 0, 180), rgb(150, 0, 190));
+    margin: auto;
 }
-
+.profilePic{
+    border: 0px solid rgb(150, 0, 150);
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    padding: 3px;
+}
 .errortxt{
     color: red;
     font-size: 0.8em;   
@@ -55,25 +63,28 @@ a:hover{
     padding: 0;
 }
 
-.post{
-    width: 30%;
-    background-color: #333333;
+
+/*  CONTAINERS?  */
+.postBox {
+    max-width: 250px;
+    margin: 10px auto;
+    background: linear-gradient(to left, rgb(180, 0, 180), rgb(150, 0, 190));
+    padding: 4px;
+}
+.post>div {
+    background: #333333;
     color: white;
-    text-align: center;
-    margin: 25px auto;
-    border-bottom: 10px solid rgb(150, 0, 150);
+    padding: 2rem;
 }
-.post:hover{
-    border-bottom: 10px solid #555555;
-    background-color: rgb(180, 80, 180);
-}
-.post>a{
+.post{
     text-decoration: none;
-    padding: 1px;
 }
+
+
 
 .pagebtns{
     margin-top: 50px;
+    margin-bottom: 50px;
 }
 .pagebtn{
     text-decoration: none;
@@ -92,7 +103,7 @@ color: black;
 }
 
 .next {
-background-color: rgb(150, 0, 150);
+background-color: rgb(180, 0, 180);
 color: white;
 }
 
