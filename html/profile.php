@@ -30,8 +30,8 @@
 
             if (isset($_SESSION["account"])){
 
-                $email = $_SESSION["account"];
-                $sql = "SELECT email, regdate FROM users WHERE email='$email' LIMIT 1";
+                $username = $_SESSION["account"];
+                $sql = "SELECT username, email, regdate FROM users WHERE username='$username' LIMIT 1";
                 $result = get_data($sql);
                 display_account($result);
 
@@ -49,7 +49,7 @@
         } else{ // TODO: Show account by id
 
            $user = $_GET["user"];
-           $sql = "SELECT email, regdate FROM users WHERE email='$user' LIMIT 1";
+           $sql = "SELECT username, email, regdate FROM users WHERE username='$user' LIMIT 1";
            $result = get_data($sql);
            if (!empty($result)){
 
@@ -84,7 +84,7 @@
 
         require("../includes/settings.php");
         try {
-            $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $dbpassword);
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -107,7 +107,7 @@
     function display_account($result){
         if (!empty($result)){
 
-            $email = $result['email'];
+            $username = $result['username'];
 
             $now = time(); // or your date as well
             $your_date = strtotime($result['regdate']);
@@ -117,9 +117,9 @@
 
             echo <<<HTML
             <div class="w3-center profileContainer">
-                <img class="profilePic" src="../pictures/profile-pictures/{$email}.jpg" />
+                <img class="profilePic" src="../pictures/profile-pictures/{$username}.jpg" />
             </div> 
-            <h3 class="w3-center">{$email}!</h3>
+            <h3 class="w3-center">{$username}!</h3>
             
             <p class="w3-center">Kontot är {$age} dagar gammalt.</p>
     

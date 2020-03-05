@@ -20,22 +20,32 @@
 
     <?php
         // Declare empty variables.
-        $emailErr = $passwordErr = $confpasswordErr = $genderErr = $pictureError = "";
-        $email = $password = $confpassword = $website = $gender = "";
+        $usernameErr = $emailErr = $passwordErr = $confpasswordErr = $genderErr = $pictureError = "";
+        $username = $email = $password = $confpassword = $website = $gender = "";
         $target_dir = "../pictures/profile-pictures/";
-        $cookie_name = "email";
-        $cookie_value = "";
+        $cookie_user_name = "user";
+        $cookie_user_value = "";
+        $cookie_email_name = "email";
+        $cookie_email_value = "";
         $err = false;
         
         // Controll values, set error if faulty inputs
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
+            if (empty($_POST["username"])){
+                $usernameErr = "Användarnamn krävs";
+                $err = true;
+            } else {
+                $username = test_input($_POST["username"]);
+                $cookie_user_value = $username;
+            }
+
             if (empty($_POST["email"])) {
                 $emailErr = "E-post krävs";
                 $err = true;
             } else {
                 $email = test_input($_POST["email"]);
-                $cookie_value = test_input($_POST["email"]);
+                $cookie_email_value = $email;
             }
 
             if (empty($_POST["password"])) {
@@ -60,7 +70,7 @@
             }
 
             if (isset($_FILES["file"])){
-                $target_file = $target_dir . $email . ".jpg";
+                $target_file = $target_dir . $username . ".jpg";
                 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
                 $image_picked = false;
 
@@ -91,11 +101,11 @@
                  require("../includes/settings.php");
 
                  try {
-                    $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $dbpassword);
+                    $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
                     // set the PDO error mode to exception
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     
-                    $sql = "SELECT email from users WHERE email='$email'";
+                    $sql = "SELECT username, email from users WHERE username='$username' OR email='$email'";
                     $stmt = $conn->prepare($sql);
                     $stmt->execute();
                     $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -106,8 +116,8 @@
                         $hashed = password_hash($password, PASSWORD_DEFAULT);
 
                         // Set new user
-                        $sql = "INSERT INTO users (email, password, gender, regdate)
-                        VALUES ('$email', '$hashed', '$gender', NOW())";
+                        $sql = "INSERT INTO users (username, email, password, gender, regdate)
+                        VALUES ('$username', '$email', '$hashed', '$gender', NOW())";
                         // use exec() because no results are returned
                         $conn->exec($sql);
                     } else {
@@ -139,7 +149,7 @@
 
                     // Set default picture
                     $file = "../pictures/profile.png";
-                    $newfile = "../pictures/profile-pictures/" . $email . ".jpg";
+                    $newfile = "../pictures/profile-pictures/" . $username . ".jpg";
 
                     if (!copy($file, $newfile)) {
                         echo "failed to copy";
@@ -147,18 +157,22 @@
                 }
 
                 // Create a cookie
-                setcookie($cookie_name, $cookie_value, time() + 86400 * 30, "/");
+                setcookie($cookie_user_name, $cookie_user_value, time() + 86400 * 30, "/");
+                setcookie($cookie_email_name, $cookie_email_value, time() + 86400 * 30, "/");
 
                 // Set session
                 session_regenerate_id();
-                $_SESSION["account"] = $email;
+                $_SESSION["account"] = $username;
 
                 date_default_timezone_set("Europe/Stockholm"); // Set timezone
                 
                 // Display welcome
-                echo "<h2 class=\"w3-center\">Välkommen {$email}!</h2>";
-                if (isset($_COOKIE[$cookie_name])){
-                    echo "<p class=\"w3-center\">" . $cookie_name . " cookie har skapats!</p>";
+                echo "<h2 class=\"w3-center\">Välkommen {$username}!</h2>";
+                if (isset($_COOKIE[$cookie_user_name])){
+                    echo "<p class=\"w3-center\">" . $cookie_user_name . " cookie har skapats!</p>";
+                }
+                if (isset($_COOKIE[$cookie_email_name])){
+                    echo "<p class=\"w3-center\">" . $cookie_email_name . " cookie har skapats!</p>";
                 }
                 // Display time of account creation
                 echo "<p class=\"w3-center\">Du skapade ditt konto den " . date("Y-m-d") . ", klockan " . date("H:i") . "</p>"; 

@@ -48,7 +48,7 @@
                     require("../includes/settings.php");
 
                     try {
-                        $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $dbpassword);
+                        $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
                         
                         // set the PDO error mode to exception
                         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -56,11 +56,11 @@
                         $user = $_SESSION["account"];
 
                         // Get email and userID
-                        $stmt = $conn->prepare("SELECT userID, email FROM users WHERE email='$user' LIMIT 1");
+                        $stmt = $conn->prepare("SELECT userID, username FROM users WHERE username='$user' LIMIT 1");
                         $stmt->execute();
                         $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
                         $result = $stmt->fetch();
-                        $author = $result['email'];
+                        $author = $result['username'];
                         $userID = $result['userID'];
 
                         // Set new user

@@ -1,13 +1,4 @@
-<form action="<?php 
-    
-    //echo $_SERVER["PHP_SELF"];
-    if (isset($_GET["id"]) && is_numeric($_GET["id"])){
-        echo "../html/post.php?id=" . $_GET["id"];
-    } else {
-        echo "../html/post.php";
-    }
-
-    ?>" method="post">
+<form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
     <fieldset class="w3-container w3-center dark form">
 
         <?php

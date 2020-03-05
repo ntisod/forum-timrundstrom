@@ -31,7 +31,7 @@
     // Get posts
     require("./includes/settings.php");
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $dbpassword);
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
         // set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -53,7 +53,7 @@
                     <a href="./html/post.php?id={$id}" class="noDecoration">
                         <div class="boxContainer">
                             <h3> {$title}</h3>
-                            <p> {$user} </p>
+                            <p> av: {$user} </p>
                             <p> {$date} </p>
                         </div>
                     </a>

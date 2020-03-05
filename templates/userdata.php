@@ -6,6 +6,16 @@
         <input type="file" name="file">
         <?php echo "<p class=\"errortxt\">" . $pictureError . "</p>" ?><br>
 
+        <label for="username">*Användarnamn:</label><br>
+        <input type="text" name="username" placeholder="Username" value="<?php
+        if ($username != "" || !isset($_COOKIE["username"])){
+            echo $email;
+        } else {
+            echo $_COOKIE["username"];
+        }
+        ?>"><br>
+        <?php echo "<p class=\"errortxt\">" . $usernameErr . "</p>" ?><br>
+
         <label for="email">*E-post:</label><br>
         <input type="email" name="email" placeholder="E-mail" 
         value="<?php 

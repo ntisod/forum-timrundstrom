@@ -3,7 +3,7 @@
 
 // Lokal XAMPP
 $servername = "localhost";
-$username = "phpuser";
+$dbusername = "phpuser";
 $dbpassword = "VXByeLbB7JCS9ets";
 $dbname = "nti-forum-db";
 

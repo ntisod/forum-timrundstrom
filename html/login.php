@@ -20,7 +20,7 @@
     <?php
         // Declare empty variables.
         $emailErr = $passwordErr = $accountErr = "";
-        $email = $password = "";
+        $username = $email = $password = "";
         $cookie_name = "email";
         $cookie_value = "";
         $err = false;
@@ -56,12 +56,12 @@
 
                 // Look for account in DB TODO:
                 try {
-                    $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $dbpassword);
+                    $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
                     // set the PDO error mode to exception
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                     // Find existing user
-                    $stmt = $conn->prepare("SELECT email, password FROM users WHERE email='$email' LIMIT 1");
+                    $stmt = $conn->prepare("SELECT username, email, password FROM users WHERE email='$email' LIMIT 1");
                     $stmt->execute();
                     $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
                     $result = $stmt->fetch();
@@ -70,6 +70,7 @@
                     if (!empty($result)){
                         if (password_verify($password, $result['password'])){
                             $matching_account = true;
+                            $username = $result['username'];
                         }
                     }
                 } catch(PDOException $e) {
@@ -92,7 +93,7 @@
                 setcookie($cookie_name, $cookie_value, time() + 86400 * 30, "/");
                 // Set session
                 session_regenerate_id();
-                $_SESSION["account"] = $email;
+                $_SESSION["account"] = $username;
 
                 header('Location: ./profile.php');
 
