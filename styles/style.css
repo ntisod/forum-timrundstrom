@@ -32,7 +32,6 @@ a:hover{
     color: white;
     margin: auto;
     margin-top: 20px;
-    margin-bottom: 100px; /*ändra jao, fett scuff*/
 }
 .title{
     width: 100%;
@@ -42,10 +41,10 @@ a:hover{
 }
 .profileContainer{
     border: 0px solid black;
+    background: linear-gradient(to left, rgb(180, 0, 180), rgb(150, 0, 190));
     border-radius: 50%;
     width: 150px;
     height: 150px;
-    background: linear-gradient(to left, rgb(180, 0, 180), rgb(150, 0, 190));
     margin: auto;
 }
 .profilePic{
@@ -53,7 +52,7 @@ a:hover{
     border-radius: 50%;
     width: 150px;
     height: 150px;
-    padding: 3px;
+    padding: 4px;
 }
 .errortxt{
     color: red;
@@ -63,24 +62,38 @@ a:hover{
     padding: 0;
 }
 
-
-/*  CONTAINERS?  */
-.postBox {
-    max-width: 250px;
-    margin: 10px auto;
+.boxOuterContainer{
     background: linear-gradient(to left, rgb(180, 0, 180), rgb(150, 0, 190));
     padding: 4px;
 }
-.post>div {
+.boxContainer{
     background: #333333;
     color: white;
     padding: 2rem;
 }
-.post{
+.noDecoration{
     text-decoration: none;
 }
+.post{
+    max-width: 250px;
+    margin: 10px auto;
+}
 
-
+.comment{
+    max-width: 300px;
+    margin: 30px auto;
+    background: #333333;
+    color: white;
+    font-size: 1.2em;
+    padding: 15px;
+}
+.comment>p{
+    max-width: 270px;
+    overflow: hidden;
+}
+.comment>p>span{
+    font-size: 15px;
+}
 
 .pagebtns{
     margin-top: 50px;
@@ -109,4 +122,7 @@ color: white;
 
 .round {
 border-radius: 50%;
+}
+.filler{
+    margin-top: 50px;
 }

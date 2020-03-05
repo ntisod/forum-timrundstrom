@@ -49,9 +49,9 @@
 
             // Display the post
             echo <<<HTML
-                <div class="postBox">
-                    <a href="./html/post.php?id={$id}" class="post">
-                        <div>
+                <div class="boxOuterContainer post">
+                    <a href="./html/post.php?id={$id}" class="noDecoration">
+                        <div class="boxContainer">
                             <h3> {$title}</h3>
                             <p> {$user} </p>
                             <p> {$date} </p>
