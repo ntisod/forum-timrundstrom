@@ -49,6 +49,9 @@
         } else{ // TODO: Show account by id
 
            $user = $_GET["user"];
+           if (isset($_SESSION["account"]) && $user == $_SESSION["account"]){
+               header('Location: ./profile.php');
+           }
            $sql = "SELECT username, email, regdate FROM users WHERE username='$user' LIMIT 1";
            $result = get_data($sql);
            if (!empty($result)){

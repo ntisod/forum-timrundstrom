@@ -75,8 +75,40 @@ a:hover{
     text-decoration: none;
 }
 .post{
-    max-width: 250px;
+    max-width: 500px;
     margin: 10px auto;
+}
+
+.post-container{
+    background: linear-gradient(to left, rgb(180, 0, 180), rgb(150, 0, 190));
+    padding: 4px;
+    margin: 15px;
+    margin-left: 15%;
+    width: 50%;
+}
+.post-view{
+    background: #333333;
+    color: white;
+    padding: 2rem;
+}
+.post-view>p{
+    text-align: left;
+    margin-bottom: -15px;
+}
+.post-text{
+    max-width: inherit;
+    word-wrap: break-word;
+}
+.post-post{
+    height: 100%;
+}
+.profile{
+    margin-left: 0;
+    width: 100%;
+}
+.flex-container{
+    display: flex;
+    flex-direction: row;
 }
 
 .comment{

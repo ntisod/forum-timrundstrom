@@ -36,7 +36,7 @@
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Find posts
-        $sql = "SELECT postID, title, date, author FROM posts ORDER BY date DESC LIMIT ".$showperpage." OFFSET ".$offset;
+        $sql = "SELECT postID, title, text, date, author FROM posts ORDER BY date DESC LIMIT ".$showperpage." OFFSET ".$offset;
         $stmt = $conn->query($sql);
 
         // Loop through all returned posts and display them on page
@@ -44,8 +44,15 @@
             // Get post values
             $id = $post['postID'];
             $title = $post['title'];
+            $text = $post['text'];
             $user = $post['author'];
             $date = $post['date']; // TODO: show time since rather than date
+
+            // Shorten the text if its too long, only show preview
+            if(strlen($text) > 180){
+                $text = substr($text, 0, 180);
+                $text = $text . "...";
+            }
 
             // Display the post
             echo <<<HTML
@@ -53,8 +60,8 @@
                     <a href="./html/post.php?id={$id}" class="noDecoration">
                         <div class="boxContainer">
                             <h3> {$title}</h3>
-                            <p> av: {$user} </p>
-                            <p> {$date} </p>
+                            <p style="word-wrap: break-word;"> {$text} </p>
+                            <p> av: {$user}<br>{$date} </p>
                         </div>
                     </a>
                 </div>

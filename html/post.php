@@ -18,8 +18,10 @@
 
     <?php 
 
-        $id = "";
+        $id = $commenttext = $commenttextErr = "";
+        $commentErr = false;
         $err = false;
+
         if (isset($_GET["id"]) && is_numeric($_GET["id"])){
             $id = $_GET["id"];
         } else if (isset($_POST["id"]) && is_numeric($_POST["id"])){
@@ -28,8 +30,6 @@
             $err = true;
         }
 
-        $commenttext = $commenttextErr = "";
-        $commentErr = false;
         require("../includes/settings.php");
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
             
@@ -97,13 +97,38 @@
             }
             
             if (!$err){
+                /*
                 echo "<h2 class=\"w3-center\">$title</h2>";
                 echo "<p class=\"w3-center\">$text <br>av: <a href=\"../html/profile.php?user=$author\">$author</a> <br> $date</p>";
-                echo "<br><br>";
+                */
+                // TODO: Fixa inlägg-profil vy
                 
-                include '../templates/commentdata.php';
+                echo <<<HTML
+                <div class="flex-container">
+                    <div class="w3-center post-container post-post">
+                        <div class="post-view">
+                            <h2 class="w3-border-bottom">$title</h2>
+                            <p class="post-text">$text</p>
+                            <br><br>
+                            <p>av: <a href="../html/profile.php?user={$author}">$author</a></p>
+                            <p>$date</p>
+                        </div>
+                    </div>
+                    <div>
+                    <div class="w3-center post-container profile">
+                        <div class="post-view">
+                            <div class="w3-center profileContainer">
+                                <img class="profilePic" src="../pictures/profile-pictures/{$author}.jpg" />
+                            </div> 
+                            <h3 class="w3-center"><a href="../html/profile.php?user={$author}">$author</a></h3>
+                            <p>//TODO: profil beskrivning</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                HTML;
 
-                // TODO: display comments
+                include '../templates/commentdata.php';
 
                 try {
                     $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
@@ -143,7 +168,6 @@
         }
 
     ?>    
-
 
 
     <h2 class="w3-center filler"></h2>
