@@ -49,8 +49,8 @@
             $date = $post['date']; // TODO: show time since rather than date
 
             // Shorten the text if its too long, only show preview
-            if(strlen($text) > 180){
-                $text = substr($text, 0, 180);
+            if(strlen($text) > 90){
+                $text = substr($text, 0, 90);
                 $text = $text . "...";
             }
 

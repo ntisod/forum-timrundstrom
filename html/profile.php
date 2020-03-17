@@ -12,7 +12,6 @@
 </head>
 <body>
     <header class="w3-container">
-        <!--img src="./pictures/nti-logo-black.png" alt="Svart NTI logga"-->
         <h1>NTI Forum</h1>
     </header>
 
@@ -35,12 +34,6 @@
                 $result = get_data($sql);
                 display_account($result);
 
-                echo <<<HTML
-                    <form action="{$_SERVER['PHP_SELF']}" method="post" class="w3-center">
-                    <input type="submit" value="Logga ut" class="submit">
-                    </form>
-                HTML;
-
             } else {
                 header('Location: ./login.php');
             }
@@ -55,19 +48,7 @@
            $sql = "SELECT username, email, regdate FROM users WHERE username='$user' LIMIT 1";
            $result = get_data($sql);
            if (!empty($result)){
-
                 display_account($result);
-
-                if (isset($_SESSION["account"])){
-                    if ($_SESSION["account"] == $result['email']){
-                        echo <<<HTML
-                            <form action="{$_SERVER['PHP_SELF']}" method="post" class="w3-center">
-                            <input type="submit" value="Logga ut" class="submit">
-                            </form>
-                         HTML;
-                    }
-                }
-
            } else {
                no_account_found();
            }
@@ -75,7 +56,6 @@
         }
 
     }
-
     
 
     function no_account_found(){
@@ -122,11 +102,77 @@
             <div class="w3-center profileContainer">
                 <img class="profilePic" src="../pictures/profile-pictures/{$username}.jpg" />
             </div> 
-            <h3 class="w3-center">{$username}!</h3>
+            <h2 class="w3-center">{$username}</h2>
             
             <p class="w3-center">Kontot är {$age} dagar gammalt.</p>
-    
-         HTML;
+            HTML;
+
+            if (isset($_SESSION["account"])){
+                if ($_SESSION["account"] == $result['username']){
+                    echo <<<HTML
+                        <form action="{$_SERVER['PHP_SELF']}" method="post" class="w3-center">
+                        <input type="submit" value="Logga ut" class="submit">
+                        </form>
+                        <br><br>
+                     HTML;
+                }
+            }
+
+            // TODO: show posts
+
+            $showperpage = 5;
+            $offset = 0;
+
+            try {
+                require("../includes/settings.php");
+                $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
+                // set the PDO error mode to exception
+                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        
+                // Find posts
+                $sql = "SELECT postID, title, text, author, date FROM posts WHERE author='$username' ORDER BY date DESC LIMIT " .$showperpage. " OFFSET " .$offset;
+                $stmt = $conn->query($sql);
+
+                // Loop through all returned posts and display them on page
+                while ($post = $stmt->fetch()) {
+                    // Get post values
+                    $id = $post['postID'];
+                    $title = $post['title'];
+                    $text = $post['text'];
+                    $user = $post['author'];
+                    $date = $post['date']; // TODO: show time since rather than date
+
+                    // Shorten the text if its too long, only show preview
+                    if(strlen($text) > 90){
+                        $text = substr($text, 0, 90);
+                        $text = $text . "...";
+                    }
+
+                    // Display the post
+                    echo <<<HTML
+                        <div class="boxOuterContainer post">
+                            <a href="../html/post.php?id={$id}" class="noDecoration">
+                                <div class="boxContainer">
+                                    <h3> {$title}</h3>
+                                    <p style="word-wrap: break-word;"> {$text} </p>
+                                    <p> av: {$user}<br>{$date} </p>
+                                </div>
+                            </a>
+                        </div>
+                    HTML;
+                }
+            } catch(PDOException $e) {
+            }
+            $conn = null; // Close connection
+
+            // TODO: öka offset med 5
+            echo <<<HTML
+            <a>
+                <div class="loadMore w3-center">
+                    <p>Ladda mer</p>
+                </div>
+            </a>
+            HTML;  
 
         }
     }
