@@ -36,7 +36,7 @@
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Find posts
-        $sql = "SELECT postID, title, text, date, author FROM posts ORDER BY date DESC LIMIT ".$showperpage." OFFSET ".$offset;
+        $sql = "SELECT postID, title, date, author FROM posts ORDER BY date DESC LIMIT ".$showperpage." OFFSET ".$offset;
         $stmt = $conn->query($sql);
 
         // Loop through all returned posts and display them on page
@@ -44,15 +44,8 @@
             // Get post values
             $id = $post['postID'];
             $title = $post['title'];
-            $text = $post['text'];
             $user = $post['author'];
             $date = $post['date']; // TODO: show time since rather than date
-
-            // Shorten the text if its too long, only show preview
-            if(strlen($text) > 90){
-                $text = substr($text, 0, 90);
-                $text = $text . "...";
-            }
 
             // Display the post
             echo <<<HTML
@@ -60,33 +53,34 @@
                     <a href="./html/post.php?id={$id}" class="noDecoration">
                         <div class="boxContainer">
                             <h3> {$title}</h3>
-                            <p style="word-wrap: break-word;"> {$text} </p>
                             <p> av: {$user}<br>{$date} </p>
                         </div>
                     </a>
                 </div>
             HTML;
-
         }
+        // Page button values
+        $backpage = $page-1; // Backpage is the page before the current page
+        if ($backpage <= 0){ // It cant be lower than 1
+            $backpage = 1;
+        }
+        $num_of_posts = $conn->query("SELECT count(*) FROM posts")->fetchColumn();
+        $forwardpage = $page+1; // Set next page (TODO: don't allow over limit)
+        if ($forwardpage > $num_of_posts / $showperpage){
+            $forwardpage = ceil($num_of_posts / $showperpage);
+        }
+
+        // Display buttons
+        echo <<<HTML
+            <div class="w3-center pagebtns">
+                <a href=".?page={$backpage}" class="pagebtn previous round">&#8249;</a>
+                <a href=".?page={$forwardpage}" class="pagebtn next round">&#8250;</a>
+            </div>
+        HTML;
 
     } catch(PDOException $e) {
     }
     $conn = null; // Close connection
-
-    // Page button values
-    $backpage = $page-1; // Backpage is the page before the current page
-    if ($backpage <= 0){ // It cant be lower than 1
-        $backpage = 1;
-    }
-    $forwardpage = $page+1; // Set next page (TODO: don't allow over limit)
-    
-    // Display buttons
-    echo <<<HTML
-        <div class="w3-center pagebtns">
-            <a href=".?page={$backpage}" class="pagebtn previous round">&#8249;</a>
-            <a href=".?page={$forwardpage}" class="pagebtn next round">&#8250;</a>
-        </div>
-    HTML;
 
     // Set the footer
     include './templates/footer.php'; 

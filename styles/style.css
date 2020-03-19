@@ -169,3 +169,10 @@ border-radius: 50%;
     color: white;
     padding: 1px;
 }
+
+.button{
+    background: none;
+    border: none;
+    width: 350px;
+    margin-bottom: 10px;
+}
