@@ -9,6 +9,22 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="shortcut icon" href="../pictures/favicon.ico"/>
     <title>NTI Forum</title>
+    <script>
+    function addPosts(){
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("posts").innerHTML += this.responseText;
+            }
+        };
+        
+        var offset = document.getElementsByClassName("button").length;
+        var username = document.getElementById("profile").innerHTML;
+
+        xmlhttp.open("GET", "getposts.php?offset="+offset+"&username="+username, true);
+        xmlhttp.send();
+    }
+    </script>
 </head>
 <body>
     <header class="w3-container">
@@ -91,7 +107,7 @@
         if (!empty($result)){
 
             $username = $result['username'];
-
+            echo "<div id=\"profile\" style=\"display:none;\">". $username ."</div>";
             $now = time(); // or your date as well
             $your_date = strtotime($result['regdate']);
             $datediff = $now - $your_date;
@@ -120,8 +136,11 @@
 
             // TODO: show posts
 
-            $showperpage = 8;
-            $offset = 0;
+            if (!empty($_GET["p"])){
+                $showperpage = $_GET["p"];
+            } else {
+                $showperpage = 8;
+            }
 
             try {
                 require("../includes/settings.php");
@@ -130,11 +149,11 @@
                 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
                 // Find posts
-                $sql = "SELECT postID, title, author, date FROM posts WHERE author='$username' ORDER BY date DESC LIMIT " .$showperpage. " OFFSET " .$offset;
+                $sql = "SELECT postID, title, author, date FROM posts WHERE author='$username' ORDER BY date DESC LIMIT " .$showperpage;
                 $stmt = $conn->query($sql);
 
                 // Loop through all returned posts and display them on page
-                echo "<div class=\"w3-section\" style=\"margin-left:35px;\">";
+                echo "<div class=\"w3-section\" id=\"posts\" style=\"margin-left:35px;\">";
                 while ($post = $stmt->fetch()) {
                     // Get post values
                     $id = $post['postID'];
@@ -150,7 +169,7 @@
 
                     // Display the post
                     echo <<<HTML
-                        <button class="button">
+                        <button class="button" id="post">
                             <div class="boxOuterContainer">
                                 <a href="../html/post.php?id={$id}" class="noDecoration">
                                     <div class="boxContainer">
@@ -169,11 +188,12 @@
 
             // TODO: öka offset med 5
             echo <<<HTML
-            <a>
+            <a onclick="addPosts()">
                 <div class="loadMore w3-center">
                     <p>Ladda mer</p>
                 </div>
             </a>
+            <p class="errortxt" id="noposts"></p>
             HTML;  
 
         }
