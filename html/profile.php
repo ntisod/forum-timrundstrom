@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="../pictures/favicon.ico"/>
     <title>NTI Forum</title>
     <script>
-    function addPosts(){
+    function loadPosts(){
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -21,7 +21,7 @@
         var offset = document.getElementsByClassName("button").length;
         var username = document.getElementById("profile").innerHTML;
 
-        xmlhttp.open("GET", "getposts.php?offset="+offset+"&username="+username, true);
+        xmlhttp.open("GET", "../templates/loadposts.php?offset="+offset+"&username="+username, true);
         xmlhttp.send();
     }
     </script>
@@ -34,45 +34,84 @@
     <?php include '../templates/navbar.php'; 
 
     echo "<h2 class=\"w3-center\">Konto</h2>";
-    
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        header('Location: ../templates/logout.php');
+
+    $edit_account = false;
+    if ($_SERVER["REQUEST_METHOD"] == "POST"){
+        if (isset($_POST["edit"]) && $_POST["edit"] == "true"){
+            if (isset($_SESSION["account"])){
+                $edit_account = true;
+            }
+        }
     }
 
-    if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    if ($edit_account){
 
-        if (empty($_GET["user"])){ // TODO: Show your account
+        echo "// TODO: redigera konto";
+        $user = $_SESSION["account"];
+        $sql = "SELECT username, email, regdate FROM users WHERE username='$user' LIMIT 1";
+        $result = get_data($sql);
 
-            if (isset($_SESSION["account"])){
+        $username = $result['username'];
+        $now = time(); // or your date as well
+        $your_date = strtotime($result['regdate']);
+        $datediff = $now - $your_date;
+        $age = $datediff / (60 * 60 * 24);
+        $age = round($age, 0);
 
-                $username = $_SESSION["account"];
-                $sql = "SELECT username, email, regdate FROM users WHERE username='$username' LIMIT 1";
-                $result = get_data($sql);
-                display_account($result);
+        echo <<<HTML
+        <div class="w3-center profileContainer">
+            <img class="profilePic" src="../pictures/profile-pictures/{$username}.jpg" />
+        </div> 
+        <h2 class="w3-center">{$username}</h2>
+        <p class="w3-center">📅 Kontot är {$age} dagar gammalt.</p>
+        <form action="" method="post" class="w3-center">
+            <fieldset class="w3-container dark form">
+                <label for="email">E-post</label><br>
+                <input type="email" name="email" value="{$result['email']}"><br>
+                <label for="description">Beskrivning</label><br>
+                <input type="text" name="description"><br>
+                <input type="submit" value="Spara" class="submit">
+            </fieldset>
+        </form>
+        HTML;
 
-            } else {
-                header('Location: ./login.php');
+    } else {
+
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+
+            if (empty($_GET["user"])){ // Show logged in account
+
+                if (isset($_SESSION["account"])){ // If they're logged in
+
+                    $username = $_SESSION["account"];
+                    $sql = "SELECT username, email, regdate FROM users WHERE username='$username' LIMIT 1";
+                    $result = get_data($sql);
+                    display_account($result);
+
+                } else { // Else, go to log in page
+                    header('Location: ./login.php');
+                }
+
+
+            } else{ // Show account by username
+
+            $user = $_GET["user"];
+            // If the chosen username is the logged in user then display their own profile
+            if (isset($_SESSION["account"]) && $user == $_SESSION["account"]){
+                header('Location: ./profile.php');
+            }
+            $sql = "SELECT username, email, regdate FROM users WHERE username='$user' LIMIT 1";
+            $result = get_data($sql);
+            if (!empty($result)){ // If an account is found, display it
+                    display_account($result);
+            } else { // Otherwise show error message: No account found
+                no_account_found();
             }
 
-
-        } else{ // TODO: Show account by id
-
-           $user = $_GET["user"];
-           if (isset($_SESSION["account"]) && $user == $_SESSION["account"]){
-               header('Location: ./profile.php');
-           }
-           $sql = "SELECT username, email, regdate FROM users WHERE username='$user' LIMIT 1";
-           $result = get_data($sql);
-           if (!empty($result)){
-                display_account($result);
-           } else {
-               no_account_found();
-           }
+            }
 
         }
-
     }
-    
 
     function no_account_found(){
         echo "<h2 class=\"w3-center\"> Oops! </h2>";
@@ -127,6 +166,11 @@
                 if ($_SESSION["account"] == $result['username']){
                     echo <<<HTML
                         <form action="{$_SERVER['PHP_SELF']}" method="post" class="w3-center">
+                        <input type="hidden" name="edit" value="true">
+                        <input type="submit" value="Redigera Konto" class="submit">
+                        </form>
+                        <br>
+                        <form action="../templates/logout.php" method="post" class="w3-center">
                         <input type="submit" value="Logga ut" class="submit">
                         </form>
                         <br><br>
@@ -134,12 +178,13 @@
                 }
             }
 
-            // TODO: show posts
+            // Show posts
 
+            // How many posts should show?
             if (!empty($_GET["p"])){
-                $showperpage = $_GET["p"];
+                $showperpage = $_GET["p"]; // Get value from p-requests
             } else {
-                $showperpage = 8;
+                $showperpage = 8; // Standard value
             }
 
             try {
@@ -186,9 +231,8 @@
             }
             $conn = null; // Close connection
 
-            // TODO: öka offset med 5
             echo <<<HTML
-            <a onclick="addPosts()">
+            <a onclick="loadPosts()">
                 <div class="loadMore w3-center">
                     <p>Ladda mer</p>
                 </div>
