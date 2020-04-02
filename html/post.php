@@ -76,6 +76,7 @@
 
                     // Find existing post
                     $stmt = $conn->prepare("SELECT postID, title, text, author, date FROM posts WHERE postID='$id' LIMIT 1");
+                    //TODO: hämta beskrivning från users tabellen samtidigt
                     $stmt->execute();
                     $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
                     $result = $stmt->fetch();

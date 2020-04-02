@@ -36,19 +36,64 @@
     echo "<h2 class=\"w3-center\">Konto</h2>";
 
     $edit_account = false;
+    $emailErr = $email = $desc = "";
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
-        if (isset($_POST["edit"]) && $_POST["edit"] == "true"){
-            if (isset($_SESSION["account"])){
-                $edit_account = true;
+        if (isset($_SESSION["account"])){
+            if (isset($_POST["edit"]) && $_POST["edit"] == "true"){
+                if (isset($_SESSION["account"])){
+                    $edit_account = true;
+                }
+            } else if (isset($_POST["cancel"])){
+                header('Location: profile.php');
+            } else if (isset($_POST["update"]) && $_POST["update"] == "true"){
+                $err = false;
+                
+                if (empty($_POST["email"])) {
+                    $emailErr = "E-post krävs";
+                    $err = true;
+                } else {
+                    $email = test_input($_POST["email"]);
+                }
+                $desc = test_input($_POST["description"]);
+
+                if ($err){
+                    $edit_account = true;
+                } else {
+
+                    $username_ = $_SESSION["account"];
+                    $sql = "UPDATE users SET email='$email', beskrivning='$desc' WHERE username='$username_'";
+                    require("../includes/settings.php");
+
+                    try {
+                        $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
+                        // set the PDO error mode to exception
+                        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                        
+                        // Prepare statement
+                        $stmt = $conn->prepare($sql);
+
+                        // execute the query
+                        $stmt->execute();
+                        
+                    } catch(PDOException $e) {
+                    }
+                    $conn = null;
+                    header('Location: profile.php');
+
+                }
+
+            } else {
+                no_account_found();
             }
+        } else {
+            no_account_found();
         }
     }
 
     if ($edit_account){
 
-        echo "// TODO: redigera konto";
         $user = $_SESSION["account"];
-        $sql = "SELECT username, email, regdate FROM users WHERE username='$user' LIMIT 1";
+        $sql = "SELECT username, email, beskrivning, regdate FROM users WHERE username='$user' LIMIT 1";
         $result = get_data($sql);
 
         $username = $result['username'];
@@ -64,13 +109,16 @@
         </div> 
         <h2 class="w3-center">{$username}</h2>
         <p class="w3-center">📅 Kontot är {$age} dagar gammalt.</p>
-        <form action="" method="post" class="w3-center">
+        <form action="{$_SERVER['PHP_SELF']}" method="post" class="w3-center">
             <fieldset class="w3-container dark form">
                 <label for="email">E-post</label><br>
                 <input type="email" name="email" value="{$result['email']}"><br>
                 <label for="description">Beskrivning</label><br>
-                <input type="text" name="description"><br>
+                <input type="text" name="description" value="{$result['beskrivning']}"><br>
+                <input type=hidden name="edit" value="false">
+                <input type=hidden name="update" value="true">
                 <input type="submit" value="Spara" class="submit">
+                <input type="submit" name="cancel" value="Avbryt" class="submit">
             </fieldset>
         </form>
         HTML;
@@ -84,7 +132,7 @@
                 if (isset($_SESSION["account"])){ // If they're logged in
 
                     $username = $_SESSION["account"];
-                    $sql = "SELECT username, email, regdate FROM users WHERE username='$username' LIMIT 1";
+                    $sql = "SELECT username, email, beskrivning, regdate FROM users WHERE username='$username' LIMIT 1";
                     $result = get_data($sql);
                     display_account($result);
 
@@ -95,22 +143,29 @@
 
             } else{ // Show account by username
 
-            $user = $_GET["user"];
-            // If the chosen username is the logged in user then display their own profile
-            if (isset($_SESSION["account"]) && $user == $_SESSION["account"]){
-                header('Location: ./profile.php');
-            }
-            $sql = "SELECT username, email, regdate FROM users WHERE username='$user' LIMIT 1";
-            $result = get_data($sql);
-            if (!empty($result)){ // If an account is found, display it
-                    display_account($result);
-            } else { // Otherwise show error message: No account found
-                no_account_found();
-            }
+                $user = $_GET["user"];
+                // If the chosen username is the logged in user then display their own profile
+                if (isset($_SESSION["account"]) && $user == $_SESSION["account"]){
+                    header('Location: ./profile.php');
+                }
+                $sql = "SELECT username, email, beskrivning, regdate FROM users WHERE username='$user' LIMIT 1";
+                $result = get_data($sql);
+                if (!empty($result)){ // If an account is found, display it
+                        display_account($result);
+                } else { // Otherwise show error message: No account found
+                    no_account_found();
+                }
 
             }
 
         }
+    }
+
+    function test_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
     }
 
     function no_account_found(){
@@ -146,6 +201,7 @@
         if (!empty($result)){
 
             $username = $result['username'];
+            $description = $result['beskrivning'];
             echo "<div id=\"profile\" style=\"display:none;\">". $username ."</div>";
             $now = time(); // or your date as well
             $your_date = strtotime($result['regdate']);
@@ -160,20 +216,20 @@
             <h2 class="w3-center">{$username}</h2>
             
             <p class="w3-center">📅 Kontot är {$age} dagar gammalt.</p>
+            <p class="w3-center description">{$description}</p>
             HTML;
 
             if (isset($_SESSION["account"])){
                 if ($_SESSION["account"] == $result['username']){
                     echo <<<HTML
-                        <form action="{$_SERVER['PHP_SELF']}" method="post" class="w3-center">
+                        <form action="{$_SERVER['PHP_SELF']}" method="post" class="w3-center" style="margin-bottom:5px;">
                         <input type="hidden" name="edit" value="true">
                         <input type="submit" value="Redigera Konto" class="submit">
                         </form>
-                        <br>
                         <form action="../templates/logout.php" method="post" class="w3-center">
                         <input type="submit" value="Logga ut" class="submit">
                         </form>
-                        <br><br>
+                        <br>
                      HTML;
                 }
             }
@@ -198,6 +254,7 @@
                 $stmt = $conn->query($sql);
 
                 // Loop through all returned posts and display them on page
+                echo "<h3 class=\"w3-center\">Inlägg</h3>";
                 echo "<div class=\"w3-section\" id=\"posts\" style=\"margin-left:35px;\">";
                 while ($post = $stmt->fetch()) {
                     // Get post values
