@@ -36,7 +36,7 @@
     echo "<h2 class=\"w3-center\">Konto</h2>";
 
     $edit_account = false;
-    $emailErr = $email = $desc = "";
+    $emailErr = $email = $desc = $psw = $pswErr = $confpswErr = $gender = "";
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         if (isset($_SESSION["account"])){
             if (isset($_POST["edit"]) && $_POST["edit"] == "true"){
@@ -48,20 +48,48 @@
             } else if (isset($_POST["update"]) && $_POST["update"] == "true"){
                 $err = false;
                 
+                //TODO: Spara profil bild
                 if (empty($_POST["email"])) {
                     $emailErr = "E-post krävs";
                     $err = true;
                 } else {
                     $email = test_input($_POST["email"]);
                 }
-                $desc = test_input($_POST["description"]);
+                $desc = test_input($_POST["beskrivning"]);
+               
+                $changepassword = true;
+                if(!empty($_POST["password"]) && empty($_POST["confpassword"]) || empty($_POST["password"]) && !empty($_POST["confpassword"])){
+                    $err = true;
+                    $pswErr = $confpswErr = "Lösenorden matchar inte";
+                } else if(!empty($_POST["password"]) && !empty($_POST["confpassword"])){
+                    if ($_POST["password"] == $_POST["confpassword"]){
+                        $psw = test_input($_POST["password"]);
+                    } else {
+                        $err = true;
+                        $pswErr = $confpswErr = "Lösenorden matchar inte";
+                    }
+                } else {
+                    $changepassword = false;
+                }
+
+                $gender = $_POST["gender"];
+
+
+
 
                 if ($err){
                     $edit_account = true;
                 } else {
 
+                    // TODO: ange lösenord för att spara info
+
                     $username_ = $_SESSION["account"];
-                    $sql = "UPDATE users SET email='$email', beskrivning='$desc' WHERE username='$username_'";
+                    if($changepassword){
+                        $hashed = password_hash($psw, PASSWORD_DEFAULT);
+                        $sql = "UPDATE users SET email='$email', beskrivning='$desc', password='$hashed', gender='$gender' WHERE username='$username_'";
+                    } else {
+                        $sql = "UPDATE users SET email='$email', beskrivning='$desc', gender='$gender' WHERE username='$username_'";
+                    }
                     require("../includes/settings.php");
 
                     try {
@@ -93,7 +121,7 @@
     if ($edit_account){
 
         $user = $_SESSION["account"];
-        $sql = "SELECT username, email, beskrivning, regdate FROM users WHERE username='$user' LIMIT 1";
+        $sql = "SELECT username, email, beskrivning, password, gender, regdate FROM users WHERE username='$user' LIMIT 1";
         $result = get_data($sql);
 
         $username = $result['username'];
@@ -109,19 +137,9 @@
         </div> 
         <h2 class="w3-center">{$username}</h2>
         <p class="w3-center">📅 Kontot är {$age} dagar gammalt.</p>
-        <form action="{$_SERVER['PHP_SELF']}" method="post" class="w3-center">
-            <fieldset class="w3-container dark form">
-                <label for="email">E-post</label><br>
-                <input type="email" name="email" value="{$result['email']}"><br>
-                <label for="description">Beskrivning</label><br>
-                <input type="text" name="description" value="{$result['beskrivning']}"><br>
-                <input type=hidden name="edit" value="false">
-                <input type=hidden name="update" value="true">
-                <input type="submit" value="Spara" class="submit">
-                <input type="submit" name="cancel" value="Avbryt" class="submit">
-            </fieldset>
-        </form>
         HTML;
+        require '../templates/edituserdata.php';
+        echo "<div class=\"filler\"></div>";
 
     } else {
 

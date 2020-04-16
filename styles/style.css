@@ -114,7 +114,7 @@ a:hover{
 
 .description{
     border-top: 1px solid gray;
-    width: 20%;
+    width: 100%;
     margin: auto;
     margin-bottom: 20px;
     word-wrap: break-word;

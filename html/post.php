@@ -98,10 +98,6 @@
             }
             
             if (!$err){
-                /*
-                echo "<h2 class=\"w3-center\">$title</h2>";
-                echo "<p class=\"w3-center\">$text <br>av: <a href=\"../html/profile.php?user=$author\">$author</a> <br> $date</p>";
-                */
                 // TODO: Fixa inlägg-profil vy
                 
                 echo <<<HTML
