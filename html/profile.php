@@ -9,22 +9,6 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="shortcut icon" href="../pictures/favicon.ico"/>
     <title>NTI Forum</title>
-    <script>
-    function loadPosts(){
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("posts").innerHTML += this.responseText;
-            }
-        };
-        
-        var offset = document.getElementsByClassName("button").length;
-        var username = document.getElementById("profile").innerHTML;
-
-        xmlhttp.open("GET", "../templates/loadposts.php?offset="+offset+"&username="+username, true);
-        xmlhttp.send();
-    }
-    </script>
 </head>
 <body>
     <header class="w3-container">
@@ -36,7 +20,9 @@
     echo "<h2 class=\"w3-center\">Konto</h2>";
 
     $edit_account = false;
-    $emailErr = $email = $desc = $psw = $pswErr = $confpswErr = $gender = "";
+    $emailErr = $email = $desc = $psw = $pswErr = $confpswErr = $gender = $pictureError = "";
+    $target_dir = "../pictures/profile-pictures/";
+        
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         if (isset($_SESSION["account"])){
             if (isset($_POST["edit"]) && $_POST["edit"] == "true"){
@@ -74,7 +60,33 @@
 
                 $gender = $_POST["gender"];
 
-
+                if (isset($_FILES["file"])){
+                    $target_file = $target_dir . $_SESSION["account"] . ".jpg";
+                    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                    $image_picked = false;
+    
+                    if (is_uploaded_file($_FILES["file"]["tmp_name"])){
+                        $image_picked = true;
+    
+                        $check = getimagesize($_FILES["file"]["tmp_name"]);
+    
+                        // Check if uploaded file is not a picture
+                        if ($check == false){
+                            $pictureError = "Filen är inte en bild";
+                            $err = true;
+                        }
+                        // Check if filesize is over 50kb
+                        if ($_FILES["file"]["size"] > 50000){
+                            $pictureError = "Förlåt, men din fil är för stor (max 50kb)";
+                            $err = true;
+                        }
+                        // Check image filetype, only jpg, jpeg, png and gif files are allowed
+                        if ($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "png" && $imageFileType != "gif"){
+                            $pictureError = "Endast JPG, JPEG, PNG and GIF files är tillåtna";
+                            $err = true;
+                        }
+                    }
+                }
 
 
                 if ($err){
@@ -106,6 +118,19 @@
                     } catch(PDOException $e) {
                     }
                     $conn = null;
+
+                    // Update profile picture
+                    if (isset($_FILES["file"]) && $image_picked){
+
+                        // Check if profile picture already exists
+                        if (file_exists($target_file)){
+                            unlink($target_file); // If so, delete it.
+                        }
+                        // Upload new file
+                        if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)){
+                        } 
+                    } 
+
                     header('Location: profile.php');
 
                 }
@@ -220,7 +245,7 @@
 
             $username = $result['username'];
             $description = $result['beskrivning'];
-            echo "<div id=\"profile\" style=\"display:none;\">". $username ."</div>";
+            echo "<div id=\"profile\" style=\"display:none;\">". $username ."</div>"; //For JS ?remove?
             $now = time(); // or your date as well
             $your_date = strtotime($result['regdate']);
             $datediff = $now - $your_date;
@@ -229,7 +254,7 @@
 
             echo <<<HTML
             <div class="w3-center profileContainer">
-                <img class="profilePic" src="../pictures/profile-pictures/{$username}.jpg" />
+                <img class="profilePic" id="profileimg" src="../pictures/profile-pictures/{$username}.jpg" />
             </div> 
             <h2 class="w3-center">{$username}</h2>
             
@@ -319,6 +344,38 @@
     }
 
     include '../templates/footer.php'; ?>
+    <script>
 
+    function loadPosts(){
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("posts").innerHTML += this.responseText;
+            }
+        };
+        
+        var offset = document.getElementsByClassName("button").length;
+        var username = document.getElementById("profile").innerHTML;
+
+        xmlhttp.open("GET", "../templates/loadposts.php?offset="+offset+"&username="+username, true);
+        xmlhttp.send();
+    }   
+
+    function refreshImage(imgElement, imgURL){
+        //doesn't refresh on its own since the picture has the same url, thus saving in it the browsers cache
+        //this forces the browser to refresh the picture by giving the url a query string, making the url different
+
+        // create a new timestamp     
+        var timestamp = new Date().getTime();        
+        var el = document.getElementById(imgElement);        
+        var queryString = "?t=" + timestamp;           
+        el.src = imgURL + queryString;    
+    }
+    
+    var usr = document.getElementById("profile").innerHTML;
+    //refresh the profile pic whenever the page is loaded/reloaded
+    refreshImage("profileimg", "../pictures/profile-pictures/"+ usr +".jpg"); 
+
+    </script>
 </body>
 </html>

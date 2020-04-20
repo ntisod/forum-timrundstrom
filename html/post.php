@@ -75,8 +75,11 @@
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                     // Find existing post
-                    $stmt = $conn->prepare("SELECT postID, title, text, author, date FROM posts WHERE postID='$id' LIMIT 1");
-                    //TODO: hämta beskrivning från users tabellen samtidigt
+
+                    $sql = "SELECT posts.title, posts.text, posts.author, posts.date, users.beskrivning 
+                    FROM posts INNER JOIN users ON posts.author=users.username WHERE posts.postID='$id' LIMIT 1";
+                    
+                    $stmt = $conn->prepare($sql);
                     $stmt->execute();
                     $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
                     $result = $stmt->fetch();
@@ -86,6 +89,7 @@
                         $text = $result['text'];
                         $author = $result['author'];
                         $date = $result['date'];
+                        $beskrivning = $result['beskrivning'];
                     } else {
                         $err = true;
                     }
@@ -118,7 +122,7 @@
                                 <img class="profilePic" src="../pictures/profile-pictures/{$author}.jpg" />
                             </div> 
                             <h3 class="w3-center"><a href="../html/profile.php?user={$author}">$author</a></h3>
-                            <p>//TODO: profil beskrivning</p>
+                            <p>$beskrivning</p>
                         </div>
                     </div>
                     </div>
@@ -133,7 +137,7 @@
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             
                     // Find comments
-                    $sql = "SELECT postID, user, text, date FROM comments WHERE postID='$id' ORDER BY date DESC LIMIT 5";
+                    $sql = "SELECT user, text, date FROM comments WHERE postID='$id' ORDER BY date DESC LIMIT 5";
                     $stmt = $conn->query($sql);
             
                     // Loop through all returned posts and display them on page

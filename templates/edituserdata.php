@@ -4,7 +4,7 @@
         
         <label for="file">Profil Bild:</label><br>
         <input type="file" name="file">
-        <?php echo "<p class=\"errortxt\">" . "</p>" ?><br>
+        <?php echo "<p class=\"errortxt\">" . $pictureError ."</p>" ?><br>
 
         <label for="email">E-post:</label><br>
         <input type="email" name="email" placeholder="E-mail" value="<?php
