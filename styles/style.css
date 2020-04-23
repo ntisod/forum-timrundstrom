@@ -144,11 +144,19 @@ a:hover{
     text-decoration: none;
     display: inline-block;
     padding: 8px 16px;
+    margin: 5px;
+}
+.doubledigits{
+    padding: 8px 10px;
 }
 
 .pagebtn:hover {
 background-color: #ddd;
 color: black;
+}
+
+.activepage{
+    border: solid 3px rgb(180, 0, 180);
 }
 
 .previous {

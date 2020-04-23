@@ -20,7 +20,7 @@
     echo "<h2 class=\"w3-center\">Inlägg</h2>";
 
     // Get page number and page offset (for second page skip first $showperpage posts)
-    $showperpage = 5;
+    $showperpage = 5; //5
     if (empty($_GET['page']) || !is_numeric($_GET['page'])){
         $page = 1;
     } else {
@@ -65,18 +65,55 @@
             $backpage = 1;
         }
         $num_of_posts = $conn->query("SELECT count(*) FROM posts")->fetchColumn();
-        $forwardpage = $page+1; // Set next page (TODO: don't allow over limit)
-        if ($forwardpage > $num_of_posts / $showperpage){
-            $forwardpage = ceil($num_of_posts / $showperpage);
+        $num_of_pages = ceil($num_of_posts / $showperpage);
+        $forwardpage = $page+1; // Set next page
+        if ($forwardpage > $num_of_pages){
+            $forwardpage = $num_of_pages;
         }
 
         // Display buttons
-        echo <<<HTML
-            <div class="w3-center pagebtns">
-                <a href=".?page={$backpage}" class="pagebtn previous round">&#8249;</a>
-                <a href=".?page={$forwardpage}" class="pagebtn next round">&#8250;</a>
-            </div>
-        HTML;
+        echo "<div class=\"w3-center pagebtns\">";
+        echo "<a href=\".?page={$backpage}\" class=\"pagebtn previous round\">&#8249;</a>";
+
+        if($page > 4){
+            //display 1
+            echo "<a href=\".?page=1\" class=\"pagebtn previous round\">1</a>";
+            echo ". . .";
+
+            //display those around $page
+            for($i = $page-3; $i < $num_of_pages; $i++){
+                if($i == $page+2){
+                    break;
+                }
+                $page_nr = $i+1;
+                $classes = "pagebtn previous round";
+                if($page_nr > 9){
+                    $classes .= " doubledigits";
+                }
+                if($page_nr == $page){
+                    echo "<a href=\".?page={$page_nr}\" class=\"$classes activepage\">$page_nr</a>";
+                } else {
+                    echo "<a href=\".?page={$page_nr}\" class=\"$classes\">$page_nr</a>";
+                }
+            }
+        } else {
+
+            for($i = 0; $i < $num_of_pages; $i++){
+                if($i == 5){
+                    break;
+                }
+                $page_nr = $i+1;
+                if($page_nr == $page){
+                    echo "<a href=\".?page={$page_nr}\" class=\"pagebtn previous activepage round\">$page_nr</a>";
+                } else {
+                    echo "<a href=\".?page={$page_nr}\" class=\"pagebtn previous round\">$page_nr</a>";
+                }
+            }
+
+        }
+
+        echo "<a href=\".?page={$forwardpage}\" class=\"pagebtn next round\">&#8250;</a>";
+        echo "</div>";
 
     } catch(PDOException $e) {
     }
