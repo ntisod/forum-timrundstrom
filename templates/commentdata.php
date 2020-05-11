@@ -1,3 +1,5 @@
+
+<!--HTML form for making comments-->
 <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
     <fieldset class="w3-container w3-center dark form">
 
