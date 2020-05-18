@@ -16,11 +16,11 @@
     </header>
     <?php include './templates/navbar.php';
     
-
+    //Title
     echo "<h2 class=\"w3-center\">Inlägg</h2>";
 
-    // Get page number and page offset (for second page skip first $showperpage posts)
-    $showperpage = 5; //5
+    // Get page number and post offset
+    $showperpage = 5; //standard: 5 
     if (empty($_GET['page']) || !is_numeric($_GET['page'])){
         $page = 1;
     } else {
@@ -76,11 +76,11 @@
         echo "<a href=\".?page={$backpage}\" class=\"pagebtn previous round\">&#8249;</a>";
 
         if($page > 4){
-            //display 1
+            //display nr. 1
             echo "<a href=\".?page=1\" class=\"pagebtn previous round\">1</a>";
             echo ". . .";
 
-            //display those around $page
+            //display pages around current page ($page)
             for($i = $page-3; $i < $num_of_pages; $i++){
                 if($i == $page+2){
                     break;

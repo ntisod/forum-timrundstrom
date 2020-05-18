@@ -21,13 +21,16 @@
 
     <?php
 
+        //check if logged in (can't make a post if not logged in)
         if (isset($_SESSION["account"])){
+            //set empty variables
             $title = $text = "";
-            $titleErr = $textErr = "";  
-            $err = false;    
+            $titleErr = $textErr = ""; 
+            $err = false;
 
             if ($_SERVER["REQUEST_METHOD"] == "POST") { 
 
+                //check if inputs are valid
                 if (empty($_POST["title"])){
                     $titleErr = "Titel krävs";
                     $err = true;
@@ -42,11 +45,12 @@
                 }
 
                 if ($err){
+                    //error occured, reload page with errors
                     require '../templates/postdata.php';
                 } else {
+                    //no errors, post it
 
                     require("../includes/settings.php");
-
                     try {
                         $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
                         
@@ -55,16 +59,15 @@
                         
                         $user = $_SESSION["account"];
 
-                        // Get email and userID
-                        $stmt = $conn->prepare("SELECT userID, username FROM users WHERE username='$user' LIMIT 1");
+                        // Get userID
+                        $stmt = $conn->prepare("SELECT userID FROM users WHERE username='$user' LIMIT 1");
                         $stmt->execute();
                         $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
                         $result = $stmt->fetch();
-                        $author = $result['username'];
                         $userID = $result['userID'];
 
-                        // Set new user
-                        $sql = "INSERT INTO posts(title, text, userID, date, author) VALUES ('$title', '$text', '$userID', NOW(), '$author')";
+                        // Make a new post
+                        $sql = "INSERT INTO posts(title, text, userID, date, author) VALUES ('$title', '$text', '$userID', NOW(), '$user')";
                         // use exec() because no results are returned
                         $conn->exec($sql);
 
@@ -79,21 +82,25 @@
                     $conn = null;
 
                     if ($err){
+                        //error when uploading the post to DB
                         require '../templates/postdata.php';
                     }
 
                 }
 
             } else {
+                //First time visit, input values
                 require '../templates/postdata.php';
             }
 
 
 
         } else {
+            //Not logged in, go to login page
             header('Location: ./login.php');
         }
 
+        
         function test_input($data) {
             $data = trim($data);
             $data = stripslashes($data);

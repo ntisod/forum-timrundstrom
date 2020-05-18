@@ -18,10 +18,12 @@
 
     <?php 
 
+        //set empty variables
         $id = $commenttext = $commenttextErr = "";
         $commentErr = false;
         $err = false;
 
+        //get the post id (its in GET if you just view the post, in POST if you make a comment)
         if (isset($_GET["id"]) && is_numeric($_GET["id"])){
             $id = $_GET["id"];
         } else if (isset($_POST["id"]) && is_numeric($_POST["id"])){
@@ -32,18 +34,22 @@
 
         require("../includes/settings.php");
         if ($_SERVER["REQUEST_METHOD"] == "POST"){
-            
-            if (isset($_SESSION["account"])){
+            // You've made a comment, upload it to DB
+
+            if (isset($_SESSION["account"])){ //Check if logged in
                 $user = $_SESSION["account"];
+
+                //get comment text
                 if (empty($_POST["text"])){
                     $commenttextErr = "Text krävs";
                     $commentErr = true;
                 } else {
                     $commenttext = test_input($_POST["text"]);
                 }
+
                 if (!$commentErr){
                     try{
-                        // LÄGG UPP KOMMENTAR
+                        // Upload comment to DB
                         $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
                         // set the PDO error mode to exception
                         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -60,16 +66,18 @@
             } else {
                 $commenttextErr = "Logga in för att skriva kommentarer";
             }
+            //Reload page, now with a new comment
             header('Location: ../html/post.php?id='.$id);
             
         }
         if ($_SERVER["REQUEST_METHOD"] == "GET"){
             
+            //set empty variables
             $title = $text = $author = $date = "";
 
             if(!$err){
                 try{
-                    // HÄMTA INLÄGG
+                    // Get post from DB
                     $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
                     // set the PDO error mode to exception
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -97,13 +105,13 @@
                     echo $e;
                 }
             } else {
+                //error, show error message
                 echo "<h2 class=\"w3-center\">Oops!</h2>";
                 echo "<p class=\"w3-center\">Inget inlägg hittades</p>";
             }
             
             if (!$err){
-                // TODO: Fixa inlägg-profil vy
-                
+                //dispaly the post and author profile
                 echo <<<HTML
                 <div class="flex-container">
                     <div class="w3-center post-container post-post">
@@ -132,6 +140,7 @@
                 include '../templates/commentdata.php';
 
                 try {
+                    // Get comments from DB
                     $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
                     // set the PDO error mode to exception
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -145,7 +154,7 @@
                         // Get post values
                         $user = $comment['user'];
                         $text = $comment['text'];
-                        $date = $comment['date']; // TODO: show time since rather than date
+                        $date = $comment['date'];
                         // Display the comment
                         echo <<<HTML
                             <div class="comment">

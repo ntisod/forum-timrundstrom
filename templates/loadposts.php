@@ -1,5 +1,5 @@
 <?php
-
+//used to reload more posts, in profile.php
 if ($_SERVER["REQUEST_METHOD"] == "GET"){
     if (!empty($_GET["offset"]) && !empty($_GET["username"])){
 

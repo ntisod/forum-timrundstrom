@@ -19,22 +19,29 @@
 
     echo "<h2 class=\"w3-center\">Konto</h2>";
 
+    //set empty variables for editing editing your account
     $edit_account = false;
     $emailErr = $email = $desc = $psw = $pswErr = $confpswErr = $gender = $pictureError = "";
     $target_dir = "../pictures/profile-pictures/";
         
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
+
+        //check if logged in
         if (isset($_SESSION["account"])){
+
+            //check if you're editing the account
             if (isset($_POST["edit"]) && $_POST["edit"] == "true"){
-                if (isset($_SESSION["account"])){
-                    $edit_account = true;
-                }
+                $edit_account = true;
+
+                //check if you pressed cancel while editing
             } else if (isset($_POST["cancel"])){
                 header('Location: profile.php');
+
+                //check if you've edited the account
             } else if (isset($_POST["update"]) && $_POST["update"] == "true"){
                 $err = false;
                 
-                //TODO: Spara profil bild
+                //check inputs
                 if (empty($_POST["email"])) {
                     $emailErr = "E-post krävs";
                     $err = true;
@@ -42,11 +49,13 @@
                     $email = test_input($_POST["email"]);
                 }
                 $desc = test_input($_POST["beskrivning"]);
-               
+                
+                //check whether to update the password or not (if left empty then don't update it)
                 $changepassword = true;
                 if(!empty($_POST["password"]) && empty($_POST["confpassword"]) || empty($_POST["password"]) && !empty($_POST["confpassword"])){
                     $err = true;
                     $pswErr = $confpswErr = "Lösenorden matchar inte";
+
                 } else if(!empty($_POST["password"]) && !empty($_POST["confpassword"])){
                     if ($_POST["password"] == $_POST["confpassword"]){
                         $psw = test_input($_POST["password"]);
@@ -60,6 +69,7 @@
 
                 $gender = $_POST["gender"];
 
+                //update profile picture
                 if (isset($_FILES["file"])){
                     $target_file = $target_dir . $_SESSION["account"] . ".jpg";
                     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -95,6 +105,7 @@
 
                     // TODO: ange lösenord för att spara info
 
+                    //update account in DB
                     $username_ = $_SESSION["account"];
                     if($changepassword){
                         $hashed = password_hash($psw, PASSWORD_DEFAULT);
@@ -144,7 +155,9 @@
     }
 
     if ($edit_account){
+        //display account with editable information
 
+        //get account from DB
         $user = $_SESSION["account"];
         $sql = "SELECT username, email, beskrivning, password, gender, regdate FROM users WHERE username='$user' LIMIT 1";
         $result = get_data($sql);
@@ -156,6 +169,7 @@
         $age = $datediff / (60 * 60 * 24);
         $age = round($age, 0);
 
+        //display account
         echo <<<HTML
         <div class="w3-center profileContainer">
             <img class="profilePic" src="../pictures/profile-pictures/{$username}.jpg" />
@@ -167,13 +181,15 @@
         echo "<div class=\"filler\"></div>";
 
     } else {
-
+        //display account as normal
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
-            if (empty($_GET["user"])){ // Show logged in account
+            //show logged in account
+            if (empty($_GET["user"])){ 
 
                 if (isset($_SESSION["account"])){ // If they're logged in
 
+                    //get account from DB
                     $username = $_SESSION["account"];
                     $sql = "SELECT username, email, beskrivning, regdate FROM users WHERE username='$username' LIMIT 1";
                     $result = get_data($sql);
@@ -191,8 +207,10 @@
                 if (isset($_SESSION["account"]) && $user == $_SESSION["account"]){
                     header('Location: ./profile.php');
                 }
+                //get account from DB
                 $sql = "SELECT username, email, beskrivning, regdate FROM users WHERE username='$user' LIMIT 1";
                 $result = get_data($sql);
+
                 if (!empty($result)){ // If an account is found, display it
                         display_account($result);
                 } else { // Otherwise show error message: No account found
@@ -212,11 +230,13 @@
     }
 
     function no_account_found(){
+        //error message if no account is found
         echo "<h2 class=\"w3-center\"> Oops! </h2>";
         echo "<p class=\"w3-center\"> Inget konto hittades </p>";
     }
 
     function get_data($sql) {
+        //function for getting data from DB
 
         require("../includes/settings.php");
         try {
@@ -251,6 +271,10 @@
             $age = $datediff / (60 * 60 * 24);
             $age = round($age, 0);
 
+            //not visible, just for JS to get the username
+            echo "<div id=\"profile\" style=\"display:none;\">". $username ."</div>"; 
+
+            //display account
             echo <<<HTML
             <div class="w3-center profileContainer">
                 <img class="profilePic" id="profileimg" src="../pictures/profile-pictures/{$username}.jpg" />
@@ -261,6 +285,7 @@
             <p class="w3-center description">{$description}</p>
             HTML;
 
+            //if logged in and displaying own account, display buttons for editing and logging out
             if (isset($_SESSION["account"])){
                 if ($_SESSION["account"] == $result['username']){
                     echo <<<HTML
@@ -286,6 +311,7 @@
             }
 
             try {
+                //get posts from DB
                 require("../includes/settings.php");
                 $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
                 // set the PDO error mode to exception
@@ -330,6 +356,7 @@
             }
             $conn = null; // Close connection
 
+            //load more posts button
             echo <<<HTML
             <a onclick="loadPosts()">
                 <div class="loadMore w3-center">
@@ -343,38 +370,38 @@
     }
 
     include '../templates/footer.php'; ?>
-    <script>
 
-    function loadPosts(){
+    <script>
+    function loadPosts() {
+        //loads more posts without reloading the page, but using the loadposts.php file
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
                 document.getElementById("posts").innerHTML += this.responseText;
             }
         };
-        
+
         var offset = document.getElementsByClassName("button").length;
         var username = document.getElementById("profile").innerHTML;
 
-        xmlhttp.open("GET", "../templates/loadposts.php?offset="+offset+"&username="+username, true);
+        xmlhttp.open("GET", "../templates/loadposts.php?offset=" + offset + "&username=" + username, true);
         xmlhttp.send();
-    }   
+    }
 
-    function refreshImage(imgElement, imgURL){
+    function refreshImage(imgElement, imgURL) {
         //doesn't refresh on its own since the picture has the same url, thus saving in it the browsers cache
         //this forces the browser to refresh the picture by giving the url a query string, making the url different
 
-        // create a new timestamp     
-        var timestamp = new Date().getTime();        
-        var el = document.getElementById(imgElement);        
-        var queryString = "?t=" + timestamp;           
-        el.src = imgURL + queryString;    
+        // create a new timestamp
+        var timestamp = new Date().getTime();
+        var el = document.getElementById(imgElement);
+        var queryString = "?t=" + timestamp;
+        el.src = imgURL + queryString;
     }
-    
+
     var usr = document.getElementById("profile").innerHTML;
     //refresh the profile pic whenever the page is loaded/reloaded
-    refreshImage("profileimg", "../pictures/profile-pictures/"+ usr +".jpg"); 
-
+    refreshImage("profileimg", "../pictures/profile-pictures/" + usr + ".jpg");
     </script>
 </body>
 </html>

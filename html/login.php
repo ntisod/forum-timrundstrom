@@ -24,14 +24,15 @@
         $cookie_name = "email";
         $cookie_value = "";
         $err = false;
-        
-        if (isset($_SESSION["account"])){
+
+        // if already logged in, go to profile.php instead
+        if (isset($_SESSION["account"])){ 
             header('Location: ./profile.php');
         }
 
-        // Controll values, set error if faulty inputs
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
+            // Controll values, set error if faulty inputs
             if (empty($_POST["email"])) {
                 $emailErr = "E-post krävs";
                 $err = true;
@@ -48,25 +49,25 @@
                 $password = test_input($_POST["password"]);
             }
 
-
+            //if all inputs are valid the look for matching account
             if (!$err){
                 $matching_account = false;
                 
                 require("../includes/settings.php");
 
-                // Look for account in DB TODO:
+                // Look for account in DB
                 try {
                     $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $dbusername, $dbpassword);
                     // set the PDO error mode to exception
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                    // Find existing user
+                    // Find existing user by email
                     $stmt = $conn->prepare("SELECT username, email, password FROM users WHERE email='$email' LIMIT 1");
                     $stmt->execute();
                     $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
                     $result = $stmt->fetch();
 
-                    // HOW DO I GET EMAIL AND PASSWORD VALUES? TODO:
+                    // check if passwords match
                     if (!empty($result)){
                         if (password_verify($password, $result['password'])){
                             $matching_account = true;
@@ -87,7 +88,7 @@
             }
 
             if (!$err){
-                // No errors, display welcome site
+                // No errors, display profile page
 
                 // Create a cookie
                 setcookie($cookie_name, $cookie_value, time() + 86400 * 30, "/");
