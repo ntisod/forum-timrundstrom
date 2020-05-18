@@ -119,9 +119,9 @@
                     <div class="w3-center post-container profile">
                         <div class="post-view">
                             <div class="w3-center profileContainer">
-                                <img class="profilePic" src="../pictures/profile-pictures/{$author}.jpg" />
+                                <img class="profilePic" id="profileimg" src="../pictures/profile-pictures/{$author}.jpg" />
                             </div> 
-                            <h3 class="w3-center"><a href="../html/profile.php?user={$author}">$author</a></h3>
+                            <h3 class="w3-center"><a id="profile" href="../html/profile.php?user={$author}">$author</a></h3>
                             <p>$beskrivning</p>
                         </div>
                     </div>
@@ -172,6 +172,26 @@
 
 
     <h2 class="w3-center filler"></h2>
-<?php include '../templates/footer.php'; ?>
+    <?php include '../templates/footer.php'; ?>
+
+    <script>
+    
+    function refreshImage(imgElement, imgURL){
+        //doesn't refresh on its own since the picture has the same url, thus saving in it the browsers cache
+        //this forces the browser to refresh the picture by giving the url a query string, making the url different
+
+        // create a new timestamp     
+        var timestamp = new Date().getTime();        
+        var el = document.getElementById(imgElement);        
+        var queryString = "?t=" + timestamp;           
+        el.src = imgURL + queryString;    
+    }
+    
+    var usr = document.getElementById("profile").innerHTML;
+    //refresh the profile pic whenever the page is loaded/reloaded
+    refreshImage("profileimg", "../pictures/profile-pictures/"+ usr +".jpg"); 
+
+    </script>
+
 </body>
 </html>

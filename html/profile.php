@@ -245,7 +245,6 @@
 
             $username = $result['username'];
             $description = $result['beskrivning'];
-            echo "<div id=\"profile\" style=\"display:none;\">". $username ."</div>"; //For JS ?remove?
             $now = time(); // or your date as well
             $your_date = strtotime($result['regdate']);
             $datediff = $now - $your_date;
@@ -256,7 +255,7 @@
             <div class="w3-center profileContainer">
                 <img class="profilePic" id="profileimg" src="../pictures/profile-pictures/{$username}.jpg" />
             </div> 
-            <h2 class="w3-center">{$username}</h2>
+            <h2 class="w3-center" id="profile">{$username}</h2>
             
             <p class="w3-center">📅 Kontot är {$age} dagar gammalt.</p>
             <p class="w3-center description">{$description}</p>
