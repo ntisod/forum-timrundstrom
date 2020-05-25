@@ -190,7 +190,7 @@
                 if (isset($_SESSION["account"])){ // If they're logged in
 
                     //get account from DB
-                    $username = $_SESSION["account"];
+                    $username = test_input($_SESSION["account"]);
                     $sql = "SELECT username, email, beskrivning, regdate FROM users WHERE username='$username' LIMIT 1";
                     $result = get_data($sql);
                     display_account($result);
