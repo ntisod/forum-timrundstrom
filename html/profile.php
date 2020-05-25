@@ -265,7 +265,7 @@
 
             $username = $result['username'];
             $description = $result['beskrivning'];
-            $now = time();
+            $now = time(); // or your date as well
             $your_date = strtotime($result['regdate']);
             $datediff = $now - $your_date;
             $age = $datediff / (60 * 60 * 24);
@@ -279,7 +279,7 @@
             <div class="w3-center profileContainer">
                 <img class="profilePic" id="profileimg" src="../pictures/profile-pictures/{$username}.jpg" />
             </div> 
-            <h2 class="w3-center">{$username}</h2>
+            <h2 class="w3-center" id="profile">{$username}</h2>
             
             <p class="w3-center">📅 Kontot är {$age} dagar gammalt.</p>
             <p class="w3-center description">{$description}</p>
